@@ -95,7 +95,7 @@ jobs:
           script: |
             cd /opt/ms-clientes-dev-app
             sudo npm install
-            pm2 start app.js
+            pm2 start app.js -f
 
       - name: Verificar estado de la aplicación
         uses: appleboy/ssh-action@master 
