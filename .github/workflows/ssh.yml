@@ -1,0 +1,28 @@
+name: Flujo trabajo SSH
+
+on:
+  push:
+    branches:
+      - gonzalo-compras  # Cambiar a la rama correspondiente si es diferente
+
+jobs:
+  ssh_job:
+    name: SSH Job
+    runs-on: ubuntu-latest  # Se puede cambiar a otra versión o SO según sea necesario
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v2
+      
+      - name: Ejecutar comando SSH
+        uses: appleboy/ssh-action@master
+        env:
+            REMOTE_HOST: ${{ env.REMOTE_HOST }}
+            REMOTE_USER: ${{ env.REMOTE_USER }}
+            PEM_FILE: ${{ env.SSH_PRIVATE_KEY }}
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.PEM_FILE }}
+          script: |
+            sudo rm -rf /opt/montoto || true
