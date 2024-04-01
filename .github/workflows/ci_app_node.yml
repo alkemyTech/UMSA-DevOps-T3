@@ -47,7 +47,7 @@ jobs:
                 echo "Git is installed."
             fi
 
-      - name: Crear directorio
+      - name: Crear directorio de trabajo
         uses: appleboy/ssh-action@master 
         with:
           host: ${{ env.REMOTE_HOST }}
@@ -80,7 +80,7 @@ jobs:
               sudo npm install express -g 
             fi
             
-            if npm list -g -depth 0 pm2 ; then
+            if npm list -g -depth 0 pm2 &> /dev/null; then
               echo "PM2 is installed."
             else
               sudo npm install pm2 -g 
@@ -94,6 +94,7 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
             cd /opt/ms-clientes-dev-app
+            npm install
             pm2 start app.js
 
       - name: Verificar estado de la aplicación
