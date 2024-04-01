@@ -1,4 +1,4 @@
-name: Flujo trabajo SSH
+name: Compras SSH
 
 on:
   push:
@@ -11,18 +11,16 @@ jobs:
     runs-on: ubuntu-latest  # Se puede cambiar a otra versión o SO según sea necesario
 
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v5
-      
+    
       - name: Ejecutar comando SSH
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1.0.3
         env:
             REMOTE_HOST: ${{ env.REMOTE_HOST }}
             REMOTE_USER: ${{ env.REMOTE_USER }}
-            PEM_FILE: ${{ env.SSH_PRIVATE_KEY }}
+            
         with:
           host: ${{ env.REMOTE_HOST }}
           username: ${{ env.REMOTE_USER }}
-          key: ${{ env.PEM_FILE }}
+          key: ${{ secrets.PEM_FILE }}
           script: |
-            sudo rm -rf /opt/montoto || true
+            sudo rm -rf /opt/compras || true
