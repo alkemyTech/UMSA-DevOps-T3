@@ -29,19 +29,19 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            if ! command -v nodejs &> /dev/null; then
+            if ! command -v nodejs > /dev/null; then
               sudo yum install -y nodejs
             else
                 echo "Node.js is installed."
             fi
             
-            if ! command -v npm &> /dev/null; then
+            if ! command -v npm > /dev/null; then
                 sudo yum install -y npm
             else
                 echo "npm is installed."
             fi
             
-            if ! command -v git &> /dev/null; then
+            if ! command -v git > /dev/null; then
                 sudo yum install -y git
             else
                 echo "Git is installed."
@@ -74,13 +74,13 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            if npm list -g -depth 0 express &> /dev/null; then
+            if npm list -g -depth 0 express > /dev/null; then
               echo "Express is installed."
             else
               sudo npm install express -g 
             fi
             
-            if npm list -g -depth 0 pm2 &> /dev/null; then
+            if npm list -g -depth 0 pm2 > /dev/null; then
               echo "PM2 is installed."
             else
               sudo npm install pm2 -g 
@@ -105,7 +105,7 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
             cd /opt/ms-clientes-dev-app
-            if curl http://localhost:3000 ; then
+            if curl http://localhost:3000 > /dev/null; then
               echo "App is running."
             else
               echo "App is not running."
