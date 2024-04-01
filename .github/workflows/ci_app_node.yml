@@ -1,0 +1,80 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: MS-CLIENTES-DEV CI
+
+env:
+  SSH_PRIVATE_KEY: ${{ secrets.PEM_MS_CLIENTES_DEV }}
+  REMOTE_USER: ec2-user
+  REMOTE_HOST: ${{ secrets.IP_CLIENTES_DEV }}
+  APP_NAME: app.js
+  
+on:
+  push:
+    branches: [ "romina-clientes" ]
+
+jobs:
+  ci-clientes-dev:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código fuente
+        uses: actions/checkout@v3
+
+      - name: Instalar paquetes nodejs npm git
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            sudo yum install -y nodejs npm git
+
+      - name: Crear directorio
+        uses: appleboy/ssh-action@master 
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            sudo rm -rf /opt/ms-clientes-dev-app
+            sudo mkdir /opt/ms-clientes-dev-app
+
+      - name: Clonar repositorio
+        uses: appleboy/ssh-action@master 
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            sudo git clone -b romina-clientes https://${{ secrets.TOKEN_GH_CLIENTES }}@github.com/alkemyTech/UMSA-DevOps-T3 /opt/ms-clientes-dev-app
+
+      - name: Instalar paquetes con NPM
+        uses: appleboy/ssh-action@master 
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            sudo npm install express pm2 -g
+
+      - name: Iniciar aplicación Node con PM2
+        uses: appleboy/ssh-action@master 
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/ms-clientes-dev-app
+            pm2 start app.js
+
+      - name: Verificar estado de la aplicación
+        uses: appleboy/ssh-action@master 
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/ms-clientes-dev-app
+            pm2 status
