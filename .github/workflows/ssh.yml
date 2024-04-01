@@ -1,5 +1,11 @@
 name: Compras SSH
 
+env:
+SSH_PRIVATE_KEY: ${{ secrets.PEM_FILE }}
+REMOTE_USER: ec2-user
+REMOTE_HOST: ${{ vars.AWS_DEV_HOST }}
+APP_NAME: app.js
+
 on:
   push:
     branches:
@@ -14,9 +20,7 @@ jobs:
     
       - name: Ejecutar comando SSH
         uses: appleboy/ssh-action@v1.0.3
-        env:
-            REMOTE_HOST: ${{ env.REMOTE_HOST }}
-            REMOTE_USER: ${{ env.REMOTE_USER }}
+       
             
         with:
           host: ${{ env.REMOTE_HOST }}
