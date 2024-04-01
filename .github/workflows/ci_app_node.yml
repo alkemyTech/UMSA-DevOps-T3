@@ -48,7 +48,8 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            sudo git clone -b romina-clientes https://${{ secrets.TOKEN_GH_CLIENTES }}@github.com/alkemyTech/UMSA-DevOps-T3 /opt/ms-clientes-dev-app
+            cd /opt/ms-clientes-dev-app
+            sudo git clone -b romina-clientes https://${{ secrets.TOKEN_GH_CLIENTES }}@github.com/alkemyTech/UMSA-DevOps-T3 .
 
       - name: Instalar paquetes con NPM
         uses: appleboy/ssh-action@master 
@@ -57,7 +58,17 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            sudo npm install express pm2 -g
+            if npm list -g -depth 0 express ; then
+              echo "Express is installed."
+            else
+              sudo npm install express -g 
+            fi
+            
+            if npm list -g -depth 0 pm2 ; then
+              echo "PM2 is installed."
+            else
+              sudo npm install pm2 -g 
+            fi
 
       - name: Iniciar aplicación Node con PM2
         uses: appleboy/ssh-action@master 
@@ -77,4 +88,9 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
             cd /opt/ms-clientes-dev-app
-            pm2 status
+            if curl http://localhost:3000 ; then
+              echo "App is running."
+            else
+              echo "App is not running."
+              exit 1
+            fi
