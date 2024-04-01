@@ -25,6 +25,6 @@ jobs:
         with:
           host: ${{ env.REMOTE_HOST }}
           username: ${{ env.REMOTE_USER }}
-          key: ${{ secrets.PEM_FILE }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
             sudo rm -rf /opt/compras || true
