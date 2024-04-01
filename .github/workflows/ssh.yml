@@ -1,10 +1,10 @@
 name: Compras SSH
 
 env:
-SSH_PRIVATE_KEY: ${{ secrets.PEM_FILE }}
-REMOTE_USER: ec2-user
-REMOTE_HOST: ${{ vars.AWS_DEV_HOST }}
-APP_NAME: app.js
+  SSH_PRIVATE_KEY: ${{ secrets.PEM_FILE }}
+  REMOTE_USER: ec2-user
+  REMOTE_HOST: ${{ vars.AWS_DEV_HOST }}
+  APP_NAME: app.js
 
 on:
   push:
