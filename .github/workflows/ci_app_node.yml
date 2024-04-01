@@ -94,7 +94,7 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
             cd /opt/ms-clientes-dev-app
-            npm install
+            sudo npm install
             pm2 start app.js
 
       - name: Verificar estado de la aplicación
