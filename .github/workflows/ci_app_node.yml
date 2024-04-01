@@ -29,7 +29,23 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            sudo yum install -y nodejs npm git
+            if ! command -v nodejs &> /dev/null; then
+              sudo yum install -y nodejs
+            else
+                echo "Node.js is installed."
+            fi
+            
+            if ! command -v npm &> /dev/null; then
+                sudo yum install -y npm
+            else
+                echo "npm is installed."
+            fi
+            
+            if ! command -v git &> /dev/null; then
+                sudo yum install -y git
+            else
+                echo "Git is installed."
+            fi
 
       - name: Crear directorio
         uses: appleboy/ssh-action@master 
@@ -58,7 +74,7 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            if npm list -g -depth 0 express ; then
+            if npm list -g -depth 0 express &> /dev/null; then
               echo "Express is installed."
             else
               sudo npm install express -g 
