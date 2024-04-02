@@ -1,0 +1,83 @@
+name: CI ambiente DEV
+
+env:
+    SSH_PRIVATE_KEY: ${{ secrets.PEM_FILE }}
+    REMOTE_USER: ec2-user
+    REMOTE_HOST: ${{ vars.AWS_DEV_HOST }}
+    APP_NAME: app.js
+
+on:
+    push:
+        branches:
+            - gonzalo-compras
+
+jobs:
+    ci_dev:
+        name: CI ambiente DEV
+        runs-on: ubuntu-latest  
+
+        steps:
+            - name: Instalar paquetes
+              uses: appleboy/ssh-action@master
+              with:
+                host: ${{ env.REMOTE_HOST }}
+                username: ${{ env.REMOTE_USER }}
+                key: ${{ env.SSH_PRIVATE_KEY }}
+                script: |
+                  sudo yum install -y nodejs npm git
+
+        
+            - name: Crear directorio
+              uses: appleboy/ssh-action@master
+              with:
+                host: ${{ env.REMOTE_HOST }}
+                username: ${{ env.REMOTE_USER }}
+                key: ${{ env.SSH_PRIVATE_KEY }}
+                script: |
+                 sudo rm -rf /opt/compras || true
+                 sudo mkdir -p /opt/compras
+                 
+            - name: Crear clonar repositorio
+              uses: appleboy/ssh-action@master
+              with:
+                host: ${{ env.REMOTE_HOST }}
+                username: ${{ env.REMOTE_USER }}
+                key: ${{ env.SSH_PRIVATE_KEY }}
+                script: |  
+                  cd /opt/compras
+                  sudo git clone -b gonzalo-compras https://${{ secrets.GIT_PAT }}@github.com/alkemyTech/UMSA-DevOps-T3
+
+            - name: Instalar paquetes
+              uses: appleboy/ssh-action@master
+              with:
+                host: ${{ env.REMOTE_HOST }}
+                username: ${{ env.REMOTE_USER }}
+                key: ${{ env.SSH_PRIVATE_KEY }}
+                script: | 
+                  cd /opt/compras
+                  sudo npm i -g express pm2  
+                  
+            - name: Iniciar servicio
+              uses: appleboy/ssh-action@master
+              with:
+                host: ${{ env.REMOTE_HOST }}
+                username: ${{ env.REMOTE_USER }}
+                key: ${{ env.SSH_PRIVATE_KEY }}
+                script: |  
+                  cd /opt/compras
+                  sudo pm2 start app.js     
+
+            - name: Test app
+              uses: appleboy/ssh-action@master
+              with:
+                host: ${{ env.REMOTE_HOST }}
+                username: ${{ env.REMOTE_USER }}
+                key: ${{ env.SSH_PRIVATE_KEY }}
+                script: |  
+                   cd /opt/compras
+                   if curl http://localhost:3000 > /dev/null; then
+                      echo "App ok"
+                   else
+                      echo "Error"
+                      exit 1
+                   fi
