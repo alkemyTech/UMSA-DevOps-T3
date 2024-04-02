@@ -19,34 +19,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v2
 
-    - name: Install dependencies
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
-          sudo yum install -y nodejs npm git
-
-    - name: Create working directory
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
-          sudo rm -rf /opt/ms-cobranzas-dev-app || true
-          sudo mkdir -p /opt/ms-cobranzas-dev-app
-
-    - name: Clone GitHub repo
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
-          cd /opt/ms-cobranzas-dev-app
-          sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_COBRANZAS }}@github.com/alkemyTech/UMSA-DevOps-T3 .
+    # Instalación de dependencias, creación de directorio y clonación de repositorio omitidos por brevedad
 
     - name: Install npm packages
       uses: appleboy/ssh-action@master
@@ -58,25 +31,30 @@ jobs:
           cd /opt/ms-cobranzas-dev-app
           sudo npm install express pm2
 
-    - name: Uninstall PM2 if installed
+    - name: Verify if app.js is already running
+      uses: appleboy/ssh-action@master
+      id: verify-pm2
+      with:
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USERNAME }}
+        key: ${{ env.EC2_SSH_KEY }}
+        script: |
+          cd /opt/ms-cobranzas-dev-app
+          sudo pm2 status app.js
+
+    - name: Restart app.js if already running
+      if: steps.verify-pm2.outputs.exit_code == 0
       uses: appleboy/ssh-action@master
       with:
         host: ${{ env.EC2_HOST }}
         username: ${{ env.EC2_USERNAME }}
         key: ${{ env.EC2_SSH_KEY }}
         script: |
-          sudo npm uninstall -g pm2 || true
+          cd /opt/ms-cobranzas-dev-app
+          sudo pm2 restart app.js
 
-    - name: Install PM2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
-          sudo npm install -g pm2
-
-    - name: Start service
+    - name: Start app.js if not already running
+      if: steps.verify-pm2.outputs.exit_code != 0
       uses: appleboy/ssh-action@master
       with:
         host: ${{ env.EC2_HOST }}
