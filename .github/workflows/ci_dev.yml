@@ -24,7 +24,7 @@ jobs:
                 username: ${{ env.REMOTE_USER }}
                 key: ${{ env.SSH_PRIVATE_KEY }}
                 script: |
-                  sudo npm install -y nodejs npm git
+                  sudo yum install -y nodejs npm git
 
         
             - name: Crear directorio
