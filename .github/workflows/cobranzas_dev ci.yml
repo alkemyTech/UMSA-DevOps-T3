@@ -58,6 +58,15 @@ jobs:
           cd /opt/ms-cobranzas-dev-app
           sudo npm install express pm2
 
+    - name: Instalar PM2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USERNAME }}
+        key: ${{ env.EC2_SSH_KEY }}
+        script: |
+          sudo npm install -g pm2
+
     - name: Start service
       uses: appleboy/ssh-action@master
       with:
