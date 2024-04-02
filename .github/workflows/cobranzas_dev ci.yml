@@ -1,13 +1,19 @@
-name: CI Cobranzas DEV
+name: CI Pipeline DEV
 
 on:
   push:
     branches:
-      - maicol_cobranzas
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    env:
+      EC2_HOST: ${{ secrets.IP_COBRANZAS_DEV }}
+      EC2_USERNAME: ${{ secrets.USERS_COBRANZAS }}
+      EC2_SSH_KEY: ${{ secrets.PEM_ORG_COBRANZAS_DEV }}
+      GH_TOKEN: ${{ secrets.TOKEN_COBRANZAS_DEV }}
 
     steps:
     - name: Checkout repo
@@ -16,37 +22,37 @@ jobs:
     - name: Install dependencies
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.IP_COBRANZAS_DEV }}
-        username: ${{ secrets.USERS_COBRANZAS }}
-        key: ${{ secrets.TOKEN_COBRANZAS }}
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USERNAME }}
+        key: ${{ env.EC2_SSH_KEY }}
         script: |
           sudo yum install -y nodejs npm git
 
     - name: Create working directory
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.IP_COBRANZAS_DEV }}
-        username: ${{ secrets.USERS_COBRANZAS }}
-        key: ${{ secrets.TOKEN_COBRANZAS }}
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USERNAME }}
+        key: ${{ env.EC2_SSH_KEY }}
         script: |
-          sudo rm -rf /opt/cobranzas-dev || true
-          sudo mkdir -p /opt/cobranzas-dev
+          sudo rm -rf /opt/nombreDeSuDirectorio || true
+          sudo mkdir -p /opt/nombreDeSuDirectorio
 
     - name: Clone GitHub repo
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.IP_COBRANZAS_DEV }}
-        username: ${{ secrets.USERS_COBRANZAS }}
-        key: ${{ secrets.TOKEN_COBRANZAS }}
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USERNAME }}
+        key: ${{ env.EC2_SSH_KEY }}
         script: |
-          sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_COBRANZAS }}@github.com/alkemyTech/UMSA-DevOps-T3 .
+          sudo git clone https://${{ env.GH_TOKEN }}@github.com/usuario/repo /opt/nombreDeSuDirectorio
 
     - name: Install npm packages
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.IP_COBRANZAS_DEV }}
-        username: ${{ secrets.USERS_COBRANZAS }}
-        key: ${{ secrets.TOKEN_COBRANZAS }}
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USERNAME }}
+        key: ${{ env.EC2_SSH_KEY }}
         script: |
           cd /opt/nombreDeSuDirectorio
           sudo npm install express pm2
@@ -54,9 +60,9 @@ jobs:
     - name: Start service
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.IP_COBRANZAS_DEV }}
-        username: ${{ secrets.USERS_COBRANZAS }}
-        key: ${{ secrets.TOKEN_COBRANZAS }}
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USERNAME }}
+        key: ${{ env.EC2_SSH_KEY }}
         script: |
           cd /opt/nombreDeSuDirectorio
           sudo pm2 start app.js
@@ -64,8 +70,8 @@ jobs:
     - name: Check service status
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.IP_COBRANZAS_DEV }}
-        username: ${{ secrets.USERS_COBRANZAS }}
-        key: ${{ secrets.TOKEN_COBRANZAS }}
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USERNAME }}
+        key: ${{ env.EC2_SSH_KEY }}
         script: |
           sudo pm2 status
