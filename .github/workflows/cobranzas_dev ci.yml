@@ -46,7 +46,7 @@ jobs:
         key: ${{ env.EC2_SSH_KEY }}
         script: |
           cd /opt/ms-cobranzas-dev-app
-            sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_COBRANZAS }}@github.com/alkemyTech/UMSA-DevOps-T3 .
+          sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_COBRANZAS }}@github.com/alkemyTech/UMSA-DevOps-T3 .
 
     - name: Install npm packages
       uses: appleboy/ssh-action@master
@@ -58,7 +58,16 @@ jobs:
           cd /opt/ms-cobranzas-dev-app
           sudo npm install express pm2
 
-    - name: Instalar PM2
+    - name: Uninstall PM2 if installed
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USERNAME }}
+        key: ${{ env.EC2_SSH_KEY }}
+        script: |
+          sudo npm uninstall -g pm2 || true
+
+    - name: Install PM2
       uses: appleboy/ssh-action@master
       with:
         host: ${{ env.EC2_HOST }}
