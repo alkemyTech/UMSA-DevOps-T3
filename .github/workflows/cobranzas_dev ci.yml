@@ -39,7 +39,7 @@ jobs:
         username: ${{ secrets.USERS_COBRANZAS }}
         key: ${{ secrets.TOKEN_COBRANZAS }}
         script: |
-          sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_COBRANZAS_DEV }}@github.com/alkemyTech/UMSA-DevOps-T3 .
+          sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_COBRANZAS }}@github.com/alkemyTech/UMSA-DevOps-T3 .
 
     - name: Install npm packages
       uses: appleboy/ssh-action@master
