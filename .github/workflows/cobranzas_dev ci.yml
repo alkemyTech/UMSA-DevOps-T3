@@ -42,6 +42,9 @@ jobs:
           cd /opt/ms-cobranzas-dev-app
           sudo pm2 status app.js
 
+    - name: Print PM2 status
+      run: echo "${{ steps.verify-pm2.outputs.stdout }}"
+
     - name: Restart app.js if already running
       if: steps.verify-pm2.outputs.exit_code == 0
       uses: appleboy/ssh-action@master
