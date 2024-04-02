@@ -75,7 +75,7 @@ jobs:
                 key: ${{ env.SSH_PRIVATE_KEY }}
                 script: |  
                    cd /opt/compras
-                   if curl http://localhost:3000 > /dev/null; then
+                   if curl http://localhost:3001 > /dev/null; then
                       echo "App ok"
                    else
                       echo "Error"
