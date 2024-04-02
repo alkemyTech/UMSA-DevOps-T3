@@ -65,7 +65,7 @@ jobs:
                 key: ${{ env.SSH_PRIVATE_KEY }}
                 script: |  
                   cd /opt/compras/UMSA-DevOps-T3
-                  sudo pm2 start app.js     
+                  sudo pm2 start app.js -f    
 
             - name: Test app
               uses: appleboy/ssh-action@master
