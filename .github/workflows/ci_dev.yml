@@ -64,7 +64,7 @@ jobs:
                 username: ${{ env.REMOTE_USER }}
                 key: ${{ env.SSH_PRIVATE_KEY }}
                 script: |  
-                  cd /opt/compras
+                  cd /opt/compras/UMSA-DevOps-T3
                   sudo pm2 start app.js     
 
             - name: Test app
