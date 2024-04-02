@@ -55,7 +55,7 @@ jobs:
         username: ${{ env.EC2_USERNAME }}
         key: ${{ env.EC2_SSH_KEY }}
         script: |
-          cd /opt/nombreDeSuDirectorio
+          cd /opt/ms-cobranzas-dev-app
           sudo npm install express pm2
 
     - name: Start service
@@ -65,7 +65,7 @@ jobs:
         username: ${{ env.EC2_USERNAME }}
         key: ${{ env.EC2_SSH_KEY }}
         script: |
-          cd /opt/nombreDeSuDirectorio
+          cd /opt/ms-cobranzas-dev-app
           sudo pm2 start app.js
 
     - name: Check service status
