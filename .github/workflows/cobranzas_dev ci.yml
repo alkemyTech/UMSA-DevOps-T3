@@ -35,8 +35,8 @@ jobs:
         username: ${{ env.EC2_USERNAME }}
         key: ${{ env.EC2_SSH_KEY }}
         script: |
-          sudo rm -rf /opt/nombreDeSuDirectorio || true
-          sudo mkdir -p /opt/nombreDeSuDirectorio
+          sudo rm -rf /opt/ms-cobranzas-dev-app || true
+          sudo mkdir -p /opt/ms-cobranzas-dev-app
 
     - name: Clone GitHub repo
       uses: appleboy/ssh-action@master
@@ -45,7 +45,8 @@ jobs:
         username: ${{ env.EC2_USERNAME }}
         key: ${{ env.EC2_SSH_KEY }}
         script: |
-          sudo git clone https://${{ env.GH_TOKEN }}@github.com/usuario/repo /opt/nombreDeSuDirectorio
+          cd /opt/ms-cobranzas-dev-app
+            sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_COBRANZAS }}@github.com/alkemyTech/UMSA-DevOps-T3 .
 
     - name: Install npm packages
       uses: appleboy/ssh-action@master
