@@ -29,11 +29,11 @@ jobs:
         username: ${{ secrets.USERS_COBRANZAS }}
         key: ${{ secrets.TOKEN_COBRANZAS }}
         script: |
-          sudo rm -rf /opt/nombreDeSuDirectorio || true
-          sudo mkdir -p /opt/nombreDeSuDirectorio
+          sudo rm -rf /opt/cobranzas-dev || true
+          sudo mkdir -p /opt/cobranzas-dev
 
     - name: Clone GitHub repo
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.IP_COBRANZAS_DEV }}
         username: ${{ secrets.USERS_COBRANZAS }}
@@ -42,7 +42,7 @@ jobs:
           sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_COBRANZAS }}@github.com/alkemyTech/UMSA-DevOps-T3 .
 
     - name: Install npm packages
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.IP_COBRANZAS_DEV }}
         username: ${{ secrets.USERS_COBRANZAS }}
@@ -52,7 +52,7 @@ jobs:
           sudo npm install express pm2
 
     - name: Start service
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.IP_COBRANZAS_DEV }}
         username: ${{ secrets.USERS_COBRANZAS }}
@@ -62,7 +62,7 @@ jobs:
           sudo pm2 start app.js
 
     - name: Check service status
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.IP_COBRANZAS_DEV }}
         username: ${{ secrets.USERS_COBRANZAS }}
