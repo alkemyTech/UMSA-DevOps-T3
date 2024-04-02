@@ -13,7 +13,7 @@ jobs:
       EC2_HOST: ${{ secrets.IP_COBRANZAS_DEV }}
       EC2_USERNAME: ${{ secrets.USERS_COBRANZAS }}
       EC2_SSH_KEY: ${{ secrets.PEM_ORG_COBRANZAS_DEV }}
-      GH_TOKEN: ${{ secrets.TOKEN_COBRANZAS_DEV }}
+      GH_TOKEN: ${{ secrets.TOKEN_COBRANZAS }}
 
     steps:
     - name: Checkout repo
