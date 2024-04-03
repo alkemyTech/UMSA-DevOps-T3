@@ -21,6 +21,15 @@ jobs:
 
     # Instalación de dependencias, creación de directorio y clonación de repositorio omitidos por brevedad
 
+    - name: Create directory if not exists
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USERNAME }}
+        key: ${{ env.EC2_SSH_KEY }}
+        script: |
+          mkdir -p /opt/ms-ventas-dev-app
+
     - name: Install npm packages
       uses: appleboy/ssh-action@master
       with:
@@ -30,6 +39,7 @@ jobs:
         script: |
           cd /opt/ms-ventas-dev-app
           sudo npm install express pm2
+
     - name: Restart or Start app.js
       uses: appleboy/ssh-action@master
       with:
@@ -39,6 +49,7 @@ jobs:
         script: |
           cd /opt/ms-ventas-dev-app
           sudo pm2 restart app.js || sudo pm2 start -f app.js
+
     - name: Check service status
       uses: appleboy/ssh-action@master
       with:
