@@ -31,6 +31,16 @@ jobs:
               sudo mkdir -p /opt/ms-cobranzas-dev-app
             fi
 
+      - name: Clone repository
+        uses: appleboy/ssh-action@master 
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            cd /opt/ms-cobranzas-dev-app
+            sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_GH_AUDITORIA }}@github.com/alkemyTech/UMSA-DevOps-T3 .
+
       - name: Install npm if not installed
         uses: appleboy/ssh-action@master
         with:
