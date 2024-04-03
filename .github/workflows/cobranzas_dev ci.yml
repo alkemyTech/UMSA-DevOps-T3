@@ -31,6 +31,18 @@ jobs:
               sudo mkdir -p /opt/ms-cobranzas-dev-app
             fi
 
+      - name: Install npm if not installed
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            if ! command -v npm &> /dev/null; then
+              sudo apt update
+              sudo apt install npm -y
+            fi
+
       - name: Install npm packages
         uses: appleboy/ssh-action@master
         with:
@@ -60,4 +72,3 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             sudo pm2 status
-
