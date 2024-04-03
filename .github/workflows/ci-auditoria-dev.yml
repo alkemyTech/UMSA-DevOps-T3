@@ -1,0 +1,105 @@
+name: CI-AUDITORIA-DEV
+
+env:
+  SSH_PRIVATE_KEY: ${{ secrets.PEM_AUDITORIA_DEV }}
+  REMOTE_USER: ec2-user
+  REMOTE_HOST: ${{ secrets.IP_AUDITORIA_DEV }}
+  APP_NAME: app.js
+  
+on:
+  push:
+    branches: [ "romina-auditoria" ]
+
+jobs:
+  ci-auditoria-dev:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código fuente
+        uses: actions/checkout@v3
+
+      - name: Instalar paquetes nodejs npm git
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            if ! command -v nodejs > /dev/null; then
+              sudo yum install -y nodejs
+            else
+                echo "Node.js is installed."
+            fi
+            
+            if ! command -v npm > /dev/null; then
+                sudo yum install -y npm
+            else
+                echo "npm is installed."
+            fi
+            
+            if ! command -v git > /dev/null; then
+                sudo yum install -y git
+            else
+                echo "Git is installed."
+            fi
+      - name: Crear directorio de trabajo
+        uses: appleboy/ssh-action@master 
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            sudo rm -rf /opt/auditoria-dev-app
+            sudo mkdir /opt/auditoria-dev-app
+      - name: Clonar repositorio
+        uses: appleboy/ssh-action@master 
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/auditoria-dev-app
+            sudo git clone -b romina-auditoria https://${{ secrets.TOKEN_GH_AUDITORIA }}@github.com/alkemyTech/UMSA-DevOps-T3 .
+      - name: Instalar paquetes con NPM
+        uses: appleboy/ssh-action@master 
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            if npm list -g -depth 0 express > /dev/null; then
+              echo "Express is installed."
+            else
+              sudo npm install express -g 
+            fi
+            
+            if npm list -g -depth 0 pm2 > /dev/null; then
+              echo "PM2 is installed."
+            else
+              sudo npm install pm2 -g 
+            fi
+      - name: Iniciar aplicación Node con PM2
+        uses: appleboy/ssh-action@master 
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/auditoria-dev-app
+            sudo npm install
+            pm2 start app.js -f
+      - name: Verificar estado de la aplicación
+        uses: appleboy/ssh-action@master 
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/auditoria-dev-app
+            if curl http://localhost:3000 > /dev/null; then
+              echo "App is running."
+            else
+              echo "App is not running."
+              exit 1
+            fi
