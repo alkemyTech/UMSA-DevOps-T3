@@ -1,5 +1,3 @@
-name: CI Ventas DEV
-
 on:
   push:
     branches:
@@ -12,49 +10,59 @@ jobs:
     env:
       EC2_HOST: ${{ secrets.IP_VENTAS_DEV }}
       EC2_USERNAME: ${{ secrets.USERS_COBRANZAS }}
-      EC2_SSH_KEY: ${{ secrets.PEM_ORG_COBRANZAS_DEV }}
+      EC2_SSH_KEY: ${{ secrets.PEM_VENTAS_DEV }}
       GH_TOKEN: ${{ secrets.TOKEN_COBRANZAS }}
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v2
 
-    # Instalación de dependencias, creación de directorio y clonación de repositorio omitidos por brevedad
-
-    - name: Create directory if not exists
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
-          sudo mkdir -p /opt/ms-ventas-dev-app
-
-    - name: Install npm packages
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
-          cd /opt/ms-ventas-dev-app
-          sudo npm install express pm2
-
-    - name: Restart or Start app.js
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
-          cd /opt/ms-ventas-dev-app
-          sudo pm2 restart app.js || sudo pm2 start -f app.js
-
-    - name: Check service status
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
-          sudo pm2 status
+      - name: Check if directory exists
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            if [ -d "/opt/ms-ventas-dev-app" ]; then
+              echo "Directory already exists."
+            else
+              echo "Directory does not exist. Creating directory..."
+              sudo mkdir -p /opt/ms-ventas-dev-app
+            fi
+      - name: Install npm if not installed
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            if ! command -v npm &> /dev/null; then
+              sudo yum install -y npm
+            fi
+      - name: Install npm packages
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            cd /opt/ms-ventas-dev-app
+            sudo npm install express -g pm2
+      - name: Restart or Start app.js
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            cd /opt/ms-ventas-dev-app
+            sudo pm2 restart app.js || sudo pm2 start -f app.js
+      - name: Check service status
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            sudo pm2 status
