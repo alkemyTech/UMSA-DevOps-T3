@@ -1,0 +1,82 @@
+name: CI Pagos DEV
+env:
+          SSH_PRIVATE_KEY: ${{ secrets.PEM_ORG_PAGOS_DEV }}
+          REMOTE_USER: ec2-user
+          REMOTE_HOST: ${{ secrets.IP_PAGOS_DEV }}
+          APP_NAME: app.js
+on:
+  push:
+    branches:
+      - franco-pagos
+
+jobs:
+  ci-pagos-dev:
+    name: CI en Pagos
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Instalar paquetes Node.js, NPM y Git
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            sudo yum install -y nodejs npm git
+            
+      - name: Crear directorio de trabajo en la máquina EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            sudo rm -rf /opt/ms-pagos-dev-app || true
+            sudo mkdir -p /opt/ms-pagos-dev-app
+            
+      - name: Clonar repositorio de GitHub
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/ms-pagos-dev-app
+            sudo git clone -b franco-pagos https://${{ secrets.TOKEN_PAGOS }}@github.com/alkemyTech/UMSA-DevOps-T3 .
+            
+      - name: Instalar paquetes NPM en la Máquina Virtual
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/ms-pagos-dev-app
+            sudo npm install express pm2 -g
+            
+      - name: Iniciar el servicio en Node con PM2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/ms-pagos-dev-app
+            sudo pm2 start app.js
+            
+      - name: Chequear si la aplicación está corriendo
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            if pm2 status | grep -q 'online'; then
+              echo "La aplicación está corriendo."
+            else
+              echo "La aplicación no está corriendo."
+              exit 1
+            fi
