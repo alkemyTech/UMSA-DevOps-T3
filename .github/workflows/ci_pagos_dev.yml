@@ -74,9 +74,10 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            if pm2 status | grep -q 'online'; then
-              echo "La aplicación está corriendo."
+            cd /opt/ms-pagos-dev-app
+            if curl http://localhost:3000 > /dev/null; then
+              echo "App is running."
             else
-              echo "La aplicación no está corriendo."
+              echo "App is not running."
               exit 1
             fi
