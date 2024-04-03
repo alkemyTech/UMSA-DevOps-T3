@@ -17,6 +17,19 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v2
 
+    - name: Check if directory exists
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.EC2_HOST }}
+        username: ${{ env.EC2_USERNAME }}
+        key: ${{ env.EC2_SSH_KEY }}
+        script: |
+          if [ -d "/opt/ms-cobranzas-dev-app" ]; then
+            echo "Directory already exists"
+          else
+            echo "Directory does not exist"
+          fi
+
     - name: Create directory if not exists
       uses: appleboy/ssh-action@master
       with:
@@ -53,5 +66,4 @@ jobs:
         username: ${{ env.EC2_USERNAME }}
         key: ${{ env.EC2_SSH_KEY }}
         script: |
-          sudo pm2 status
 
