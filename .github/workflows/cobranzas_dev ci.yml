@@ -50,7 +50,6 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             cd /opt/ms-cobranzas-dev-app
-            
             sudo npm install express pm2
 
       - name: Restart or Start app.js
