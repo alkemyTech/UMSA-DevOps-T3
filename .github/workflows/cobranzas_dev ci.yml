@@ -31,6 +31,15 @@ jobs:
               sudo mkdir -p /opt/ms-cobranzas-dev-app
             fi
 
+      - name: Install Git
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            sudo apt-get update && sudo apt-get install -y git
+
       - name: Clone repository
         uses: appleboy/ssh-action@master 
         with:
