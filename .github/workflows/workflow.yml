@@ -13,7 +13,7 @@ jobs:
     env:
       SSH_PRIVATE_KEY: ${{ secrets.PEM_PROV_DEV }}
       REMOTE_USER: ec2-user
-      REMOTE_HOST: ${{ secrets.IP_PROV_DEV }}
+      REMOTE_HOST: ${{ vars.IP_PROV_DEV }}
 
     steps:
     - name: Checkout repository
