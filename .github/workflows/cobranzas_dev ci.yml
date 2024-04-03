@@ -38,7 +38,7 @@ jobs:
           username: ${{ env.EC2_USERNAME }}
           key: ${{ env.EC2_SSH_KEY }}
           script: |
-            sudo apt-get update && sudo apt-get install -y git
+            sudo yum update -y && sudo yum install -y git
 
       - name: Clone repository
         uses: appleboy/ssh-action@master 
