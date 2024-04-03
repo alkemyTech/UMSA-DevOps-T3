@@ -30,6 +30,24 @@ jobs:
               echo "Directory does not exist. Creating directory..."
               sudo mkdir -p /opt/ms-ventas-dev-app
             fi
+      - name: Install Git
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            sudo yum update -y && sudo yum install -y git
+      - name: Clone repository
+        uses: appleboy/ssh-action@master 
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            cd /opt
+            sudo rm -rf /opt/ms-ventas-dev-app  # Eliminar el directorio existente
+            sudo git clone -b maicol_ventas https://${{ secrets.TOKEN_COBRANZAS }}@github.com/alkemyTech/UMSA-DevOps-T3 /opt/ms-cobranzas-dev-app
       - name: Install npm if not installed
         uses: appleboy/ssh-action@master
         with:
