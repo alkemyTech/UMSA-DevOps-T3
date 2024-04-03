@@ -70,7 +70,7 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             cd /opt/ms-cobranzas-dev-app
-            sudo npm install express -g pm2
+            sudo npm install express pm2
 
       - name: Restart or Start app.js
         uses: appleboy/ssh-action@master
@@ -90,4 +90,3 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             sudo pm2 status
-
