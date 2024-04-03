@@ -24,6 +24,6 @@ jobs:
         with:
           host: ${{ env.REMOTE_HOST }}
           username: ${{ env.REMOTE_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
             sudo rm -rf /opt/pagos || true
