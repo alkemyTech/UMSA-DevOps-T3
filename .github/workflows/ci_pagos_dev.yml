@@ -65,7 +65,7 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
             cd /opt/ms-pagos-dev-app
-            sudo pm2 start app.js
+            sudo pm2 start app.js -f
             
       - name: Chequear si la aplicación está corriendo
         uses: appleboy/ssh-action@master
