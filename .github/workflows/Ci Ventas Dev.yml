@@ -1,4 +1,4 @@
-name: CI Cobranzas DEV
+name: CI Ventas DEV
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
         username: ${{ env.EC2_USERNAME }}
         key: ${{ env.EC2_SSH_KEY }}
         script: |
-          mkdir -p /opt/ms-ventas-dev-app
+          sudo mkdir -p /opt/ms-ventas-dev-app
 
     - name: Install npm packages
       uses: appleboy/ssh-action@master
