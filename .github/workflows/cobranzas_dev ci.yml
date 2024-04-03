@@ -14,56 +14,49 @@ jobs:
       GH_TOKEN: ${{ secrets.TOKEN_COBRANZAS }}
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v2
 
-    - name: Check if directory exists
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
-          if [ -d "/opt/ms-cobranzas-dev-app" ]; then
-            echo "Directory already exists"
-          else
-            echo "Directory does not exist"
-          fi
+      - name: Check if directory exists
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            if [ -d "/opt/ms-cobranzas-dev-app" ]; then
+              echo "Directory already exists."
+            else
+              echo "Directory does not exist. Creating directory..."
+              mkdir -p /opt/ms-cobranzas-dev-app
+            fi
 
-    - name: Create directory if not exists
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
-          mkdir -p /opt/ms-cobranzas-dev-app
+      - name: Install npm packages
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            cd /opt/ms-cobranzas-dev-app
+            sudo npm install express pm2
 
-    - name: Install npm packages
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
-          cd /opt/ms-cobranzas-dev-app
-          sudo npm install express pm2
+      - name: Restart or Start app.js
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            cd /opt/ms-cobranzas-dev-app
+            sudo pm2 restart app.js || sudo pm2 start -f app.js
 
-    - name: Restart or Start app.js
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
-          cd /opt/ms-cobranzas-dev-app
-          sudo pm2 restart app.js || sudo pm2 start -f app.js
-
-    - name: Check service status
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.EC2_HOST }}
-        username: ${{ env.EC2_USERNAME }}
-        key: ${{ env.EC2_SSH_KEY }}
-        script: |
+      - name: Check service status
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            sudo pm2 status
 
