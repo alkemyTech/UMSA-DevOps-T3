@@ -13,7 +13,7 @@ jobs:
     env:
       SSH_PRIVATE_KEY: $ {{secrets.PEM_PROV_DEV}}
       REMOTE_USER: ec2-user
-      REMOTE_HOST: ${{ secrets.AWS_DEV_HOST }}
+      REMOTE_HOST: $ {{ secrets.IP_PROV_DEV }}
 
     steps:
     - name: Checkout repository
@@ -22,8 +22,8 @@ jobs:
     - name: Delete directory on remote server
       uses: appleboy/ssh-action@master
       with:
-                host: ${{ env.REMOTE_HOST }}
-                username: ${{ env.REMOTE_USER }}
-                key: ${{ env.SSH_PRIVATE_KEY }}
+                host: $ {{ env.IP_PROV_DEV }}
+                username: $ {{ env.REMOTE_USER }}
+                key: $ {{ env.SSH_PRIVATE_KEY }}
                 script: |
                   sudo rm -rf /opt/compras || true
