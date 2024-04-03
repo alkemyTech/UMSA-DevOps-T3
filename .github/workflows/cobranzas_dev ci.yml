@@ -47,8 +47,9 @@ jobs:
           username: ${{ env.EC2_USERNAME }}
           key: ${{ env.EC2_SSH_KEY }}
           script: |
-            cd /opt/ms-cobranzas-dev-app
-            sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_GH_AUDITORIA }}@github.com/alkemyTech/UMSA-DevOps-T3 .
+            cd /opt
+            sudo rm -rf /opt/ms-cobranzas-dev-app  # Eliminar el directorio existente
+            sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_GH_AUDITORIA }}@github.com/alkemyTech/UMSA-DevOps-T3 /opt/ms-cobranzas-dev-app
 
       - name: Install npm if not installed
         uses: appleboy/ssh-action@master
