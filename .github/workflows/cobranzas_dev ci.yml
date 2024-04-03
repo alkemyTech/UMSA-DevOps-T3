@@ -38,7 +38,8 @@ jobs:
           username: ${{ env.EC2_USERNAME }}
           key: ${{ env.EC2_SSH_KEY }}
           script: |
-            sudo cd /opt/ms-cobranzas-dev-app
+            cd /opt/ms-cobranzas-dev-app
+            sudo npm install
             sudo npm install express pm2
 
       - name: Restart or Start app.js
@@ -48,7 +49,7 @@ jobs:
           username: ${{ env.EC2_USERNAME }}
           key: ${{ env.EC2_SSH_KEY }}
           script: |
-            sudo cd /opt/ms-cobranzas-dev-app
+            cd /opt/ms-cobranzas-dev-app
             sudo pm2 restart app.js || sudo pm2 start -f app.js
 
       - name: Check service status
