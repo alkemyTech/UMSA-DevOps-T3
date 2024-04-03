@@ -28,7 +28,7 @@ jobs:
               echo "Directory already exists."
             else
               echo "Directory does not exist. Creating directory..."
-              mkdir -p /opt/ms-cobranzas-dev-app
+              mkdir -p -f /opt/ms-cobranzas-dev-app
             fi
 
       - name: Install npm packages
