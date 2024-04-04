@@ -80,6 +80,8 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             cd /opt/ms-ventas-dev-app
+            sudo ls -l   # Comprobar la existencia del archivo
+            sudo pm2 status   # Verificar el estado de PM2
             sudo pm2 restart app.js || sudo pm2 start -f app.js
 
       - name: Check service status
