@@ -1,4 +1,4 @@
-name: Delete Directory
+name: Proveedores
 
 on:
   push:
