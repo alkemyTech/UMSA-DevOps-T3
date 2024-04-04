@@ -1,0 +1,29 @@
+name: Proveedores
+
+on:
+  push:
+    branches:
+      - martin-proveedorees
+
+env:
+  SSH_PRIVATE_KEY: ${{ secrets.PEM_PROV_DEV }}
+  REMOTE_USER: ec2-user
+  REMOTE_HOST: ${{ vars.IP_PROV_DEV }}
+  GH_TOKEN: ${{ secrets.TOKEN_PROV }}
+jobs:
+  delete_directory:
+    name: Delete Directory on Remote Server
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Delete directory on remote server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.REMOTE_HOST }}
+        username: ${{ env.REMOTE_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          sudo rm -rf /opt/compras || true
