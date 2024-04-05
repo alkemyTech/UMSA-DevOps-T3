@@ -54,7 +54,7 @@ jobs:
           username: ${{ env.EC2_USERNAME }}
           key: ${{ env.EC2_SSH_KEY }}
           script: |
-            sudo npm install pm2 --prefix /opt/node_modules -g
+            sudo npm install pm2 /opt/ms-ventas-dev-app
 
       # Resto de los pasos para el despliegue
       - name: Install Git
