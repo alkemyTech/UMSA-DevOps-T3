@@ -69,7 +69,7 @@ jobs:
           username: ${{ env.EC2_USERNAME }}
           key: ${{ env.EC2_SSH_KEY }}
           script: |
-            sudo env PATH="$PATH" pm2 status
+            sudo env PATH="$PATH:$(npm bin -g)" pm2 status
 
       - name: Install npm packages
         uses: appleboy/ssh-action@master
