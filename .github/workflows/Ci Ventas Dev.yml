@@ -80,7 +80,7 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             cd /opt/ms-ventas-dev-app
-            sudo $(which pm2) start app.js
+            sudo $(which pm2) start -f app.js
 
       - name: Check service status
         uses: appleboy/ssh-action@master
