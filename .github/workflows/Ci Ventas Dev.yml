@@ -62,6 +62,15 @@ jobs:
               sudo yum install -y npm
             fi
 
+      - name: Update environment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            sudo env PATH="$PATH" pm2 status
+
       - name: Install npm packages
         uses: appleboy/ssh-action@master
         with:
@@ -72,16 +81,6 @@ jobs:
             cd /opt/ms-ventas-dev-app
             sudo npm install express pm2
 
-      - name: Install PM2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.EC2_HOST }}
-          username: ${{ env.EC2_USERNAME }}
-          key: ${{ env.EC2_SSH_KEY }}
-          script: |
-            cd /opt/ms-ventas-dev-app
-            sudo npm install -g pm2
-
       - name: Restart or Start app.js
         uses: appleboy/ssh-action@master
         with:
@@ -91,8 +90,8 @@ jobs:
           script: |
             cd /opt/ms-ventas-dev-app
             sudo ls -l
-            sudo pm2 status
-            sudo pm2 restart app.js || sudo pm2 start -f app.js
+            sudo $(which pm2) status
+            sudo $(which pm2) restart app.js || sudo $(which pm2) start -f app.js
 
       - name: Check service status
         uses: appleboy/ssh-action@master
@@ -101,4 +100,5 @@ jobs:
           username: ${{ env.EC2_USERNAME }}
           key: ${{ env.EC2_SSH_KEY }}
           script: |
-            sudo pm2 status
+            sudo $(which pm2) status
+
