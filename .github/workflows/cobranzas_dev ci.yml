@@ -48,7 +48,7 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             cd /opt
-            sudo rm -rf /opt/ms-cobranzas-dev-app  # Eliminar el directorio existente
+            sudo rm -rf /opt/ms-cobranzas-dev-app
             sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_COBRANZAS }}@github.com/alkemyTech/UMSA-DevOps-T3 /opt/ms-cobranzas-dev-app
 
       - name: Install npm if not installed
@@ -61,6 +61,15 @@ jobs:
             if ! command -v npm &> /dev/null; then
               sudo yum install -y npm
             fi
+
+      - name: Update environment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            sudo env PATH="$PATH" pm2 status
 
       - name: Install npm packages
         uses: appleboy/ssh-action@master
@@ -80,9 +89,9 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             cd /opt/ms-cobranzas-dev-app
-            sudo ls -l   # Comprobar la existencia del archivo
-            sudo pm2 status   # Verificar el estado de PM2
-            sudo pm2 restart app.js || sudo pm2 start -f app.js
+            sudo ls -l
+            sudo $(which pm2) status
+            sudo $(which pm2) restart app.js || sudo $(which pm2) start -f app.js
 
       - name: Check service status
         uses: appleboy/ssh-action@master
@@ -91,4 +100,4 @@ jobs:
           username: ${{ env.EC2_USERNAME }}
           key: ${{ env.EC2_SSH_KEY }}
           script: |
-            sudo pm2 status
+            sudo $(which pm2) status
