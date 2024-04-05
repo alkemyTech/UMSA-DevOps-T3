@@ -17,6 +17,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
+      # Paso para comprobar si el directorio existe y crearlo si es necesario
       - name: Check if directory exists
         uses: appleboy/ssh-action@master
         with:
@@ -31,6 +32,31 @@ jobs:
               sudo mkdir -p /opt/ms-ventas-dev-app
             fi
 
+      # Paso para instalar Node.js y npm en un directorio específico
+      - name: Install Node.js and npm
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            sudo apt update
+            sudo apt install -y nodejs npm
+            export PATH="$HOME/.npm/bin:$PATH"
+            mkdir -p /opt/node_modules  # Directorio donde se instalarán los paquetes
+            npm config set prefix /opt/node_modules  # Configurar npm para que instale paquetes en el directorio personal
+
+      # Paso para instalar PM2 en un directorio específico
+      - name: Install PM2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            sudo npm install pm2 --prefix /opt/node_modules -g
+
+      # Resto de los pasos para el despliegue
       - name: Install Git
         uses: appleboy/ssh-action@master
         with:
