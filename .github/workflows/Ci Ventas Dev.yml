@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - maicol_ventas
+    - maicol_ventas
 
 jobs:
   deploy:
@@ -30,7 +30,7 @@ jobs:
               echo "Directory does not exist. Creating directory..."
               sudo mkdir -p /opt/ms-ventas-dev-app
             fi
-
+     
       - name: Install Git
         uses: appleboy/ssh-action@master
         with:
@@ -39,7 +39,7 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             sudo yum update -y && sudo yum install -y git
-
+      
       - name: Clone repository
         uses: appleboy/ssh-action@master 
         with:
@@ -50,7 +50,7 @@ jobs:
             cd /opt
             sudo rm -rf /opt/ms-ventas-dev-app
             sudo git clone -b maicol_ventas https://${{ secrets.TOKEN_COBRANZAS }}@github.com/alkemyTech/UMSA-DevOps-T3 /opt/ms-ventas-dev-app
-
+      
       - name: Install npm if not installed
         uses: appleboy/ssh-action@master
         with:
@@ -61,7 +61,7 @@ jobs:
             if ! command -v npm &> /dev/null; then
               sudo yum install -y npm
             fi
-
+      
       - name: Update environment
         uses: appleboy/ssh-action@master
         with:
@@ -70,7 +70,7 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             sudo env PATH="$PATH" pm2 status
-
+      
       - name: Install npm packages
         uses: appleboy/ssh-action@master
         with:
@@ -80,7 +80,7 @@ jobs:
           script: |
             cd /opt/ms-ventas-dev-app
             sudo npm install express pm2
-
+      
       - name: Restart or Start app.js
         uses: appleboy/ssh-action@master
         with:
@@ -92,7 +92,7 @@ jobs:
             sudo ls -l
             sudo $(which pm2) status
             sudo $(which pm2) restart app.js || sudo $(which pm2) start -f app.js
-
+      
       - name: Check service status
         uses: appleboy/ssh-action@master
         with:
@@ -101,4 +101,3 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             sudo $(which pm2) status
-
