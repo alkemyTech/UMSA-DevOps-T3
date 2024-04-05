@@ -51,6 +51,37 @@ jobs:
             sudo rm -rf /opt/ms-ventas-dev-app
             sudo git clone -b maicol_ventas https://${{ secrets.TOKEN_COBRANZAS }}@github.com/alkemyTech/UMSA-DevOps-T3 /opt/ms-ventas-dev-app
 
+      - name: Install npm if not installed
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            if ! command -v npm &> /dev/null; then
+              sudo yum install -y npm
+            fi
+
+      - name: Install npm packages
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            cd /opt/ms-ventas-dev-app
+            sudo npm install express
+
+      - name: Install PM2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            cd /opt/ms-ventas-dev-app
+            sudo npm install pm2
+
       - name: Restart or Start app.js
         uses: appleboy/ssh-action@master
         with:
@@ -60,8 +91,8 @@ jobs:
           script: |
             cd /opt/ms-ventas-dev-app
             sudo ls -l
-            sudo $(which pm2) status
-            sudo $(which pm2) restart app.js || sudo $(which pm2) start -f app.js
+            sudo pm2 status
+            sudo pm2 restart app.js || sudo pm2 start -f app.js
 
       - name: Check service status
         uses: appleboy/ssh-action@master
@@ -70,4 +101,4 @@ jobs:
           username: ${{ env.EC2_USERNAME }}
           key: ${{ env.EC2_SSH_KEY }}
           script: |
-            sudo $(which pm2) status
+            sudo pm2 status
