@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - maicol_cobranzas
+    - maicol_cobranzas
 
 jobs:
   deploy:
@@ -30,7 +30,6 @@ jobs:
               echo "Directory does not exist. Creating directory..."
               sudo mkdir -p /opt/ms-cobranzas-dev-app
             fi
-
       - name: Install Git
         uses: appleboy/ssh-action@master
         with:
@@ -39,7 +38,6 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             sudo yum update -y && sudo yum install -y git
-
       - name: Clone repository
         uses: appleboy/ssh-action@master 
         with:
@@ -50,7 +48,6 @@ jobs:
             cd /opt
             sudo rm -rf /opt/ms-cobranzas-dev-app
             sudo git clone -b maicol_cobranzas https://${{ secrets.TOKEN_COBRANZAS }}@github.com/alkemyTech/UMSA-DevOps-T3 /opt/ms-cobranzas-dev-app
-
       - name: Install npm if not installed
         uses: appleboy/ssh-action@master
         with:
@@ -61,16 +58,6 @@ jobs:
             if ! command -v npm &> /dev/null; then
               sudo yum install -y npm
             fi
-
-      - name: Update environment
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.EC2_HOST }}
-          username: ${{ env.EC2_USERNAME }}
-          key: ${{ env.EC2_SSH_KEY }}
-          script: |
-            sudo env PATH="$PATH:$(npm bin -g)" pm2 status
-
       - name: Install npm packages
         uses: appleboy/ssh-action@master
         with:
@@ -79,9 +66,8 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             cd /opt/ms-cobranzas-dev-app
-            sudo npm install express pm2
-
-      - name: Restart or Start app.js
+            sudo npm install
+      - name: Start app.js with PM2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ env.EC2_HOST }}
@@ -89,10 +75,7 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             cd /opt/ms-cobranzas-dev-app
-            sudo ls -l
-            sudo $(which pm2) status
-            sudo $(which pm2) restart app.js || sudo $(which pm2) start -f app.js
-
+            sudo $(which pm2) start -f app.js
       - name: Check service status
         uses: appleboy/ssh-action@master
         with:
