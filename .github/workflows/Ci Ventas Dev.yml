@@ -80,7 +80,7 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             cd /opt/ms-ventas-dev-app
-            sudo npm install pm2
+            sudo npm install -g pm2
 
       - name: Restart or Start app.js
         uses: appleboy/ssh-action@master
