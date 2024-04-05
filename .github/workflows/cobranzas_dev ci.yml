@@ -62,7 +62,7 @@ jobs:
               sudo yum install -y npm
             fi
 
-      - name: Install npm packages
+      - name: Install npm packages and PM2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ env.EC2_HOST }}
@@ -71,14 +71,6 @@ jobs:
           script: |
             cd /opt/ms-cobranzas-dev-app
             sudo npm install
-
-      - name: Instalar PM2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.EC2_HOST }}
-          username: ${{ env.EC2_USERNAME }}
-          key: ${{ env.EC2_SSH_KEY }}
-          script: |
             sudo npm install -g pm2
     
       - name: Start app.js with PM2
