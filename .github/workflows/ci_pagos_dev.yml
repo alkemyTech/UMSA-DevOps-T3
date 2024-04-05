@@ -64,9 +64,9 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            cd /opt/ms-pagos-dev-app
-            sudo npm install
-            sudo pm2 start app.js -f
+                cd /opt/ms-pagos-dev-app
+                sudo npm install
+                sudo pm2 start app.js -f
             
       - name: Chequear si la aplicación está corriendo
         uses: appleboy/ssh-action@master
