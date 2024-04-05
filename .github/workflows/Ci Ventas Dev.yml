@@ -70,7 +70,7 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             cd /opt/ms-ventas-dev-app
-            sudo npm install express
+            sudo npm install express pm2
 
       - name: Install PM2
         uses: appleboy/ssh-action@master
