@@ -26,4 +26,4 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            sudo rm -rf /opt/montoto || trues
+            sudo rm -rf /opt/montoto || true
