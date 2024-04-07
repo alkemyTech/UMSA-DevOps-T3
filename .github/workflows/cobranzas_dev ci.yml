@@ -62,7 +62,7 @@ jobs:
               sudo yum install -y npm
             fi
 
-      - name: Install npm packages and PM2
+      - name: Install npm packages
         uses: appleboy/ssh-action@master
         with:
           host: ${{ env.EC2_HOST }}
@@ -71,6 +71,16 @@ jobs:
           script: |
             cd /opt/ms-cobranzas-dev-app
             sudo npm install
+    
+      - name: Install npm packages and PM2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            cd /opt/ms-cobranzas-dev-app
+            
             sudo npm install -g pm2
     
       - name: Start app.js with PM2
@@ -80,9 +90,20 @@ jobs:
           username: ${{ env.EC2_USERNAME }}
           key: ${{ env.EC2_SSH_KEY }}
           script: |
-            cd /opt/ms-cobranzas-dev-app
-            sudo $(which pm2) start -f app.js
-      
+            app_dir="/opt/ms-cobranzas-dev-app"
+            app_name="app.js"
+            pm2=$(which pm2)
+
+            # Verificar si la aplicación ya está instalada y en ejecución con PM2
+            if sudo $pm2 list | grep -q "\<${app_name}\>"; then
+              echo "La aplicación '${app_name}' ya está instalada. Reiniciando..."
+                sudo $pm2 restart $app_name
+            else
+                echo "La aplicación '${app_name}' no está instalada. Instalando..."
+                cd $app_dir
+                sudo $pm2 start -f $app_name
+            fi
+ 
       - name: Check service status
         uses: appleboy/ssh-action@master
         with:
