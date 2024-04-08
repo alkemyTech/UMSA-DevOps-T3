@@ -34,7 +34,7 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            sudo rm -rf /opt/ms-pagos-dev-app
+            sudo rm -rf /opt/ms-pagos-dev-app || true
             sudo mkdir -p /opt/ms-pagos-dev-app
             
       - name: Clonar repositorio de GitHub
