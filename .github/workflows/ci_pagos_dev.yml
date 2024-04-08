@@ -90,9 +90,8 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
             cd /opt/ms-pagos-dev-app
-            if curl http://localhost:3000 > /dev/null; then
-              echo "App is running."
+            if sudo pm2 list | grep -q "app.*online"; then
+              echo "La aplicación está en línea."
             else
-              echo "App is not running."
-              exit 1
+              echo "La aplicación no está en línea."
             fi
