@@ -22,9 +22,6 @@ jobs:
               sudo apt-get update
               sudo apt-get install nodejs npm git -y
     
-          - name: Create Working Directory
-            run: sudo mkdir -p /opt/appDir
-    
           - name: Clone Repo
             uses: appleboy/ssh-action@master
             with:
