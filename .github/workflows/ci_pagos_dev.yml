@@ -62,7 +62,6 @@ jobs:
                 else
                   echo "Express ya está instalado."
                 fi
-      
                 # Verificar si pm2 está instalado globalmente
                 if ! npm list -g -depth 0 pm2 > /dev/null; then
                   echo "Instalando pm2..."
@@ -79,14 +78,9 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
                 cd /opt/ms-pagos-dev-app
-                if ! npm list > /dev/null; then
-                  echo "Instalando paquetes npm..."
-                  sudo npm install
-                else
-                  echo "Los paquetes npm ya están instalados."
-                fi
-      
-                sudo pm2 start app.js -f
+                sudo npm install
+                sudo pm2 delete app
+                sudo pm2 start app.js
             
       - name: Chequear si la aplicación está corriendo
         uses: appleboy/ssh-action@master
