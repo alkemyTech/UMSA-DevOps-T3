@@ -54,8 +54,22 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            cd /opt/ms-pagos-dev-app
-            sudo npm install express pm2 -g
+                cd /opt/ms-pagos-dev-app
+                # Verificar si express está instalado globalmente
+                if ! npm list -g -depth 0 express > /dev/null; then
+                  echo "Instalando express..."
+                  sudo npm install express -g 
+                else
+                  echo "Express ya está instalado."
+                fi
+      
+                # Verificar si pm2 está instalado globalmente
+                if ! npm list -g -depth 0 pm2 > /dev/null; then
+                  echo "Instalando pm2..."
+                  sudo npm install pm2 -g 
+                else
+                  echo "PM2 ya está instalado."
+                fi
             
       - name: Iniciar el servicio en Node con PM2
         uses: appleboy/ssh-action@master
@@ -65,7 +79,13 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
                 cd /opt/ms-pagos-dev-app
-                sudo npm install
+                if ! npm list > /dev/null; then
+                  echo "Instalando paquetes npm..."
+                  sudo npm install
+                else
+                  echo "Los paquetes npm ya están instalados."
+                fi
+      
                 sudo pm2 start app.js -f
             
       - name: Chequear si la aplicación está corriendo
