@@ -52,6 +52,33 @@ resource "aws_security_group_rule" "custom_ingress" {
   security_group_id = aws_security_group.instance_security_group.id
 }
 
+resource "aws_security_group_rule" "ssh_egress" {
+  type = "egress"
+  from_port = 22
+  to_port = 22
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.instance_security_group.id
+}
+
+resource "aws_security_group_rule" "http_egress" {
+  type = "egress"
+  from_port = 443
+  to_port = 443
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.instance_security_group.id
+}
+
+resource "aws_security_group_rule" "custom_egress" {
+  type = "egress"
+  from_port = 3000
+  to_port = 3000
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.instance_security_group.id
+}
+
 # Salida para mostrar la IP pública de la instancia EC2 después del despliegue
 output "public_ip_dev" {
   value = aws_instance.ORG-PROVEEDORES-DEV.public_ip
