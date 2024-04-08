@@ -48,6 +48,11 @@ jobs:
               sudo npm install -g express pm2
               npm install
     
+          - name: Detener la aplicación Node si está corriendo
+            run: | 
+                  sudo pm2 stop myApp || true
+
+
           - name: Start Node Service
             run: |
               sleep 5 # Espera 5 segundos  
