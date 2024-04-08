@@ -33,6 +33,14 @@ jobs:
               key: ${{ env.SSH_PRIVATE_KEY }} 
               script: |
                 sudo rm -rf /opt/appDir/repo # Remove directory if exists
+                
+                # Check if Git is installed, if not, install it
+                if ! [ -x "$(command -v git)" ]; then
+                  echo 'Error: git is not installed. Installing git...' >&2
+                  sudo apt-get update
+                  sudo apt-get install git -y
+                fi
+      
                 sudo git clone https://${{ secrets.TOKEN_PROV }}@github.com/alkemyTech/UMSA-DevOps-T3 .
     
           - name: Install NPM Packages
