@@ -1,0 +1,50 @@
+name: CI Pipeline - DEV
+on:
+  push:
+    branches:
+      - martin-proveedores
+
+env:
+  SSH_PRIVATE_KEY: ${{ secrets.PEM_PROV_DEV }}
+  REMOTE_USER: ec2-user
+  REMOTE_HOST: ${{ secrets.IP_PROV_DEV }}
+  GH_TOKEN: ${{ secrets.TOKEN_PROV }}
+jobs:
+    build:
+        runs-on: ubuntu-latest
+    
+        steps:
+          - name: Checkout Repo
+            uses: actions/checkout@v2
+    
+          - name: Install Node.js, NPM, and Git
+            run: |
+              sudo apt-get update
+              sudo apt-get install nodejs npm git -y
+    
+          - name: Create Working Directory
+            run: sudo mkdir -p /opt/appDir
+    
+          - name: Clone Repo
+            uses: appleboy/ssh-action@master
+            with:
+              host: ${{ env.REMOTE_HOST }}
+              username: ${{ env.REMOTE_USER }}
+              key: ${{ env.SSH_PRIVATE_KEY }} 
+              script: |
+                sudo rm -rf /opt/appDir/repo # Remove directory if exists
+                sudo git clone https://${{ secrets.TOKEN_PROV }}@github.com/alkemyTech/UMSA-DevOps-T3 .
+    
+          - name: Install NPM Packages
+            run: |
+              sudo npm install -g express pm2
+              cd /opt/appDir/repo
+              npm install
+    
+          - name: Start Node Service
+            run: |
+              sudo pm2 start /opt/appDir/repo/app.js
+    
+          - name: Check if Application is Running
+            run: |
+              sudo pm2 status
