@@ -50,7 +50,7 @@ jobs:
     
           - name: Start Node Service
             run: |
-              sudo pm2 start /opt/appDir/repo/app.js
+              sudo pm2 start /opt/appDir/app.js
     
           - name: Check if Application is Running
             run: |
