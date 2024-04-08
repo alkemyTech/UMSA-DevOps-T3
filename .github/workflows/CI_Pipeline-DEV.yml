@@ -50,6 +50,7 @@ jobs:
     
           - name: Start Node Service
             run: |
+              sleep 5 # Espera 5 segundos  
               sudo pm2 start /opt/appDir/app.js --name "myApp"
     
           - name: Check if Application is Running
