@@ -51,7 +51,7 @@ jobs:
           - name: Start Node Service
             run: |
               cd /opt/appDir/UMSA-DevOps-T3 # Change directory to the cloned repository
-              sudo pm2 start /opt/appDir/repo/app.js
+              sudo pm2 start /opt/appDir/UMSA-DevOps-T3/app.js
     
           - name: Check if Application is Running
             run: |
