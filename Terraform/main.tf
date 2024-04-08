@@ -5,7 +5,7 @@ provider "aws" {
 
 # Crear un nuevo grupo de seguridad
 resource "aws_security_group" "instance_security_group" {
-  name        = "instance_security_group4"
+  name        = "instance_security_group5"
   description = "Security group for EC2 instance"
 }
 
