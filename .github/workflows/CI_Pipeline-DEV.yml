@@ -43,9 +43,8 @@ jobs:
           - name: Install NPM Packages
             run: |
               sudo mkdir -p /opt/appDir # Create directory if it doesn't exist
-              sudo rm -rf /opt/appDir # Remove contents of /opt/appDir if it's not empty
+              cd /opt/appDir # Change directory to /opt/appDir
               sudo npm install -g express pm2
-              cd /opt/appDir
               npm install
     
           - name: Start Node Service
