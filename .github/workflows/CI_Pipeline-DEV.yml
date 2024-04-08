@@ -44,6 +44,7 @@ jobs:
             run: |
               sudo mkdir -p /opt/appDir # Create directory if it doesn't exist
               cd /opt/appDir # Change directory to /opt/appDir
+              npm init -y # Initialize package.json with default values
               sudo npm install -g express pm2
               npm install
     
