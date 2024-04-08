@@ -40,8 +40,8 @@ jobs:
                   sudo yum install git -y
                 fi
                 cd /opt
-                sudo rm -rf /opt/appDir/repo # Remove directory if exists
-                sudo git clone https://${{ secrets.TOKEN_PROV }}@github.com/alkemyTech/UMSA-DevOps-T3 /opt/appDir
+                sudo rm -rf /opt/appDir/repo/* # Remove directory if exists
+                sudo git clone https://${{ secrets.GH_TOKEN }}@github.com/alkemyTech/UMSA-DevOps-T3 /opt/appDir
     
           - name: Install NPM Packages
             run: |
