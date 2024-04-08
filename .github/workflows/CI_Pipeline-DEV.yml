@@ -45,6 +45,7 @@ jobs:
     
           - name: Install NPM Packages
             run: |
+              sudo mkdir -p /opt/appDir/repo # Create directory if it doesn't exist
               sudo npm install -g express pm2
               cd /opt/appDir/repo
               npm install
