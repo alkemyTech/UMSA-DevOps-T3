@@ -50,13 +50,13 @@ jobs:
     
           - name: Detener la aplicación Node si está corriendo
             run: | 
-                  sudo pm2 stop App.js || true
+                  sudo pm2 stop myApp || true
 
 
           - name: Start Node Service
             run: |
               sleep 5 # Espera 5 segundos  
-              sudo pm2 start /opt/appDir/app.js
+              sudo pm2 start /opt/appDir/app.js --name "myApp"
     
           - name: Check if Application is Running
             run: |
