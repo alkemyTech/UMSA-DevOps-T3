@@ -37,8 +37,8 @@ jobs:
                 # Check if Git is installed, if not, install it
                 if ! [ -x "$(command -v git)" ]; then
                   echo 'Error: git is not installed. Installing git...' >&2
-                  sudo apt-get update
-                  sudo apt-get install git -y
+                  sudo yum update -y
+                  sudo yum install git -y
                 fi
       
                 sudo git clone https://${{ secrets.TOKEN_PROV }}@github.com/alkemyTech/UMSA-DevOps-T3 .
