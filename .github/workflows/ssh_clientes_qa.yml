@@ -1,0 +1,30 @@
+name: ssh clientes qa
+
+on:
+  push:
+    branches:
+      - romina-clientes-qa
+env:
+  SSH_PRIVATE_KEY: ${{ secrets.PEM_CLIENTES_QA }}
+  REMOTE_USER: ec2-user
+  REMOTE_HOST: ${{ secrets.IP_CLIENTES_QA }}
+  APP_NAME: app.js
+  
+jobs:
+  conexion-ssh:
+    name: conexion por ssh
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Conexion por ssh mas comando
+        uses: appleboy/ssh-action@master
+        
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            sudo rm -rf /opt/clientes_qa || true
