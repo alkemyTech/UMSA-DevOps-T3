@@ -1,0 +1,29 @@
+name: SSH a pagos
+
+on:
+  push:
+    branches:
+      - franco-pagos
+
+jobs:
+  ssh_job:
+    name: SSH Job
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Ejecutar comando SSH
+        uses: appleboy/ssh-action@master
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.PEM_ORG_PAGOS_QA }}
+          REMOTE_USER: ec2-user
+          REMOTE_HOST: ${{ secrets.IP_PAGOS_QA }}
+          APP_NAME: app.js
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            sudo rm -rf /opt/pagos-qa || true
