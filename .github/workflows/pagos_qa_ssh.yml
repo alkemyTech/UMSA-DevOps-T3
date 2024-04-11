@@ -3,7 +3,7 @@ name: SSH a pagos qa
 on:
   push:
     branches:
-      - franco-pagos
+      - franco-pagos-qa
 
 jobs:
   ssh_job:
