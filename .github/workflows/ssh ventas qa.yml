@@ -1,0 +1,29 @@
+name: ssh cobranzas qa
+
+on:
+  push:
+    branches:
+      - maicol-ventas-qa
+env:
+  SSH_PRIVATE_KEY: ${{ secrets.PEM_MICROSERVICIOS }}
+  REMOTE_USER: ${{ secrets.USERS_COBRANZAS }}
+  REMOTE_HOST: ${{ secrets.IP_VENTAS_QA }}
+  
+jobs:
+  conexion-ssh:
+    name: conexion por ssh
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Conexion por ssh mas comando
+        uses: appleboy/ssh-action@master
+        
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            sudo rm -rf /opt/ventas_qa || true
