@@ -1,4 +1,4 @@
-name: SSH a pagos
+name: SSH a pagos qa
 
 on:
   push:
