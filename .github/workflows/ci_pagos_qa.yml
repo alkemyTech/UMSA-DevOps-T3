@@ -10,7 +10,7 @@ on:
       - franco-pagos-qa
 
 jobs:
-  ci-pagos-dev:
+  ci-pagos-qa:
     runs-on: ubuntu-latest
 
     steps:
