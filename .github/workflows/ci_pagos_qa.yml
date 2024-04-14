@@ -26,6 +26,7 @@ jobs:
           script: |
             sudo rm -rf /opt/ms-pagos-qa-app || true
             sudo mkdir -p /opt/ms-pagos-qa-app
+            sudo usermod -aG docker $USER
             
       - name: Clonar repositorio de GitHub
         uses: appleboy/ssh-action@master
