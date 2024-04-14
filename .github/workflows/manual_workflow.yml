@@ -1,29 +1,16 @@
-name: Manual Trigger Workflow with loglevel & tags
+name: Manual Trigger Workflow
 
 on:
   workflow_dispatch:
-    branches:
-      - franco-pagos-qa
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'information'
-        type: choice
-        options:
-          - information
-          - debug
-          - warning
-          - critical
-      tags:
-        description: 'Purpose of Run This Workflow?'
-        required: true
-        type: string
 
 jobs:
-  print-tag:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Print the purpose of run
-        run: echo  ${{ inputs.tags }} purpose 
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Aquí van los pasos restantes del flujo de trabajo
+
 
