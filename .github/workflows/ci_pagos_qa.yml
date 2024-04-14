@@ -16,7 +16,27 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+        
+      - name: Crear directorio de trabajo en la máquina EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            sudo rm -rf /opt/ms-pagos-qa-app || true
+            sudo mkdir -p /opt/ms-pagos-qa-app
+            
+      - name: Clonar repositorio de GitHub
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/ms-pagos-qa-app
+            sudo git clone -b franco-pagos https://${{ secrets.TOKEN_PAGOS }}@github.com/alkemyTech/UMSA-DevOps-T3 .
+            
       # Instalar Docker
       - name: Install Docker
         run: |
@@ -26,6 +46,7 @@ jobs:
       # Construir la imagen Docker
       - name: Build Docker image
         run: |
+          cd /opt/ms-pagos-qa-app
           docker build -t pagosimagen .
 
       # Autenticación en DockerHub
