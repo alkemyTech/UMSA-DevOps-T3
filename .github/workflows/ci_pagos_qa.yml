@@ -1,4 +1,4 @@
-name: CI Pagos qa
+name: CIPagosqa
 env:
           SSH_PRIVATE_KEY: ${{ secrets.PEM_ORG_PAGOS_DEV }}
           REMOTE_USER: ec2-user
