@@ -35,7 +35,7 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
             cd /opt/ms-pagos-qa-app
-            sudo git clone -b franco-pagos https://${{ secrets.TOKEN_PAGOS }}@github.com/alkemyTech/UMSA-DevOps-T3 .
+            sudo git clone -b franco-pagos-qa https://${{ secrets.TOKEN_PAGOS }}@github.com/alkemyTech/UMSA-DevOps-T3 .
             
       # Instalar Docker
       - name: Install Docker
