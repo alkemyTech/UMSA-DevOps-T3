@@ -21,7 +21,7 @@ jobs:
       - name: Install Docker
         run: |
           sudo apt-get update -y
-          sudo yum install -y docker
+          sudo apt-get install -y docker
 
       # Construir la imagen Docker
       - name: Build Docker image
