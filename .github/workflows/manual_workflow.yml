@@ -1,23 +1,29 @@
-name: Manual Trigger Workflow
+name: Manual Trigger Workflow with loglevel & tags
 
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Seleccione el entorno de destino'
+      logLevel:
+        description: 'Log level'
         required: true
-        default: 'QA'
+        default: 'information'
+        type: choice
         options:
-          - 'QA'
-          - 'Producción'
+          - information
+          - debug
+          - warning
+          - critical
+      tags:
+        description: 'Purpose of Run This Workflow?'
+        required: true
+        type: string
+  push:
+    branches:
+      - franco-pagos-qa
 
 jobs:
-  ci-pagos-qa:
+  print-tag:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Paso 1
-        run: echo "Este es el paso 1"
-
-      - name: Paso 2
-        run: echo "Este es el paso 2"
+      - name: Print the purpose of run
+        run: echo  ${{ inputs.tags }} purpose
