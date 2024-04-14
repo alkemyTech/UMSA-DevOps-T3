@@ -39,15 +39,25 @@ jobs:
             
       # Instalar Docker
       - name: Install Docker
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y docker
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+           sudo apt-get update -y
+           sudo apt-get install -y docker
 
       # Construir la imagen Docker
       - name: Build Docker image
-        run: |
-          cd /opt/ms-pagos-qa-app
-          docker build -t pagosimagen .
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/ms-pagos-qa-app
+            docker build -t pagosimagen .
 
       # Autenticación en DockerHub
       - name: Login to DockerHub
