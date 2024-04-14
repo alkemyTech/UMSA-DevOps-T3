@@ -79,8 +79,18 @@ jobs:
         run: echo "${{ secrets.DOCKERPAGO_TOKEN }}" | docker login -u "${{ secrets.dockerUserpago }}" --password-stdin
 
       # Subir imagen a DockerHub
-      - name: Push image to DockerHub
-        run: docker push "${{secrets.dockerUserpago}}"/pagosimagen:latest
+      #- name: Push image to DockerHub
+      #  run: docker push "${{secrets.dockerUserpago}}"/pagosimagen:latest
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.dockerUserpago }}/pagosimagen:latest
+          username: ${{ secrets.dockerUserpago }}
+          password: ${{ secrets.DOCKERPAGO_TOKEN }}
+
 
       # Despliegue al entorno de QA (manual)
       - name: Desplegar al entorno de QA
