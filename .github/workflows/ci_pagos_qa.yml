@@ -5,10 +5,12 @@ env:
           REMOTE_HOST: ${{ secrets.IP_PAGOS_QA }}
           APP_NAME: app.js
 on:
+  workflow_dispatch:
   push:
     branches:
       - franco-pagos-qa
-  workflow_dispatch:
+  
+
 jobs:
   ci-pagos-qa:
     runs-on: ubuntu-latest
