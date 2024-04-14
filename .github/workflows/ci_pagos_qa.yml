@@ -80,7 +80,7 @@ jobs:
 
       # Subir imagen a DockerHub
       - name: Push image to DockerHub
-        run: docker push ${{secrets.dockerUserpago}}/pagosimagen:latest
+        run: docker push francotorrico1999328/pagosimagen:latest
 
       # Despliegue al entorno de QA (manual)
       - name: Desplegar al entorno de QA
