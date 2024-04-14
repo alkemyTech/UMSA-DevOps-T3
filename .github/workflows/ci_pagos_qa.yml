@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI Pagos qa
 env:
           SSH_PRIVATE_KEY: ${{ secrets.PEM_ORG_PAGOS_DEV }}
           REMOTE_USER: ec2-user
@@ -20,8 +20,8 @@ jobs:
       # Instalar Docker
       - name: Install Docker
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker.io
+          sudo yum update -y
+          sudo yum install -y docker
 
       # Construir la imagen Docker
       - name: Build Docker image
