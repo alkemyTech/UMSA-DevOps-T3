@@ -79,7 +79,7 @@ jobs:
 
       # Subir imagen a DockerHub
       - name: Push image to DockerHub
-        run: docker push pagosimagen
+        run: docker push pagosimagen:latest
 
       # Despliegue al entorno de QA (manual)
       - name: Desplegar al entorno de QA
