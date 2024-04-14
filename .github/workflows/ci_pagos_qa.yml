@@ -45,8 +45,8 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-           sudo apt-get update -y
-           sudo apt-get install -y docker
+           sudo yum update -y
+           sudo yum install -y docker
 
       # Construir la imagen Docker
       - name: Build Docker image
