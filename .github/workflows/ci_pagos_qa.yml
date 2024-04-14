@@ -6,8 +6,6 @@ env:
           APP_NAME: app.js
 on:
   workflow_dispatch:
-    branches:
-      - franco-pagos-qa
 
 jobs:
   ci-pagos-qa:
