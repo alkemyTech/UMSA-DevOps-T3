@@ -95,5 +95,4 @@ jobs:
 
       # Despliegue al entorno de QA (manual)
       - name: Desplegar al entorno de QA
-        if: github.event_name == 'workflow_dispatch' # Ejecuta solo cuando se inicie manualmente
         run: echo "Presiona un botón para desplegar en QA"
