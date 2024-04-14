@@ -26,3 +26,4 @@ jobs:
     steps:
       - name: Print the purpose of run
         run: echo  ${{ inputs.tags }} purpose 
+
