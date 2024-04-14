@@ -71,8 +71,8 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
             cd /opt/ms-pagos-qa-app
-            docker rmi pagosimagen
-            docker build -t pagosimagen .
+            docker rmi pagosimagen || true
+            
 
       # Autenticación en DockerHub
       - name: Login to DockerHub
