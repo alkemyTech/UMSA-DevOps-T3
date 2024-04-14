@@ -2,6 +2,8 @@ name: Manual Trigger Workflow with loglevel & tags
 
 on:
   workflow_dispatch:
+    branches:
+      - franco-pagos-qa
     inputs:
       logLevel:
         description: 'Log level'
@@ -17,13 +19,11 @@ on:
         description: 'Purpose of Run This Workflow?'
         required: true
         type: string
-  push:
-    branches:
-      - franco-pagos-qa
 
 jobs:
   print-tag:
     runs-on: ubuntu-latest
     steps:
       - name: Print the purpose of run
-        run: echo  ${{ inputs.tags }} purpose
+        run: echo  ${{ inputs.tags }} purpose 
+
