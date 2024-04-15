@@ -85,13 +85,10 @@ jobs:
 
       # Autenticación en DockerHub
       - name: Login to DockerHub
-        uses: appleboy/ssh-action@master
+        uses: docker/login-action@v2
         with:
-          host: ${{ env.REMOTE_HOST }}
-          username: ${{ env.REMOTE_USER }}
-          key: ${{ env.SSH_PRIVATE_KEY }}
-          script: |
-            echo "${{ secrets.DOCKERPAGO_TOKEN }}" | docker login -u "${{ secrets.dockerUserpago }}" --password-stdin
+          username: ${{ secrets.dockerUserpago }}
+          password: ${{ secrets.DOCKERPAGO_TOKEN }}
       # Subir imagen a DockerHub
       #- name: Push image to DockerHub
       #  run: docker push "${{secrets.dockerUserpago}}"/pagosimagen:latest
