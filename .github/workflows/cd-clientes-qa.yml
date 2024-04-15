@@ -1,0 +1,23 @@
+name: Build and Push Docker Image
+
+on:
+  workflow_dispatch:
+    inputs:
+        branch:
+          description: 'Elegir branch'
+          required: true
+          default: 'main'
+
+  
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest 
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  
+      with:
+        ref: ${{ github.event.inputs.branch }}
+        
+    - name: mostrar
+      run: echo "probando en ${{ github.event.inputs.branch }}"
