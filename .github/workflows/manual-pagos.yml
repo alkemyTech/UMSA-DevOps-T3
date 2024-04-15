@@ -6,9 +6,6 @@ on:
       name:
         description: "Who to greet"
         default: "World"
-  push:
-    branches:
-        - franco-pagos-qa
 jobs:
     hello:
         runs-on: ubuntu-latest
