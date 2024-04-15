@@ -12,12 +12,7 @@ jobs:
   crear_subir_imagen_docker:
     runs-on: ubuntu-latest 
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2  
-      with:
-        ref: ${{ github.event.inputs.branch }}
-        
+    steps:        
     - name: Check if Dockerfile exists
       run: |
         if ls | grep -q '^Dockerfile$'; then
