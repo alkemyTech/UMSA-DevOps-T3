@@ -14,9 +14,6 @@ on:
         options:
           - 'QA: Entorno de Pruebas (QA)'
           - 'PROD: Entorno de Producción (PROD)'
-  push:
-    branches:
-      - franco-pagos-qa
 jobs:
   ci-pagos-qa:
     runs-on: ubuntu-latest
