@@ -85,8 +85,13 @@ jobs:
 
       # Autenticación en DockerHub
       - name: Login to DockerHub
-        run: echo "${{ secrets.DOCKERPAGO_TOKEN }}" | docker login -u "${{ secrets.dockerUserpago }}" --password-stdin
-
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            echo "${{ secrets.DOCKERPAGO_TOKEN }}" | docker login -u "${{ secrets.dockerUserpago }}" --password-stdin
       # Subir imagen a DockerHub
       #- name: Push image to DockerHub
       #  run: docker push "${{secrets.dockerUserpago}}"/pagosimagen:latest
@@ -103,4 +108,11 @@ jobs:
 
       # Despliegue al entorno de QA (manual)
       - name: Desplegar al entorno de QA
-        run: echo "Presiona un botón para desplegar en QA"
+        if: github.event_name == 'workflow_dispatch'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Presiona un botón para desplegar en QA"
