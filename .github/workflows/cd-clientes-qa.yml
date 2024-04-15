@@ -9,7 +9,7 @@ on:
 
   
 jobs:
-  build-and-push:
+  crear_subir_imagen_docker:
     runs-on: ubuntu-latest 
 
     steps:
@@ -18,5 +18,11 @@ jobs:
       with:
         ref: ${{ github.event.inputs.branch }}
         
-    - name: mostrar
-      run: echo "probando en ${{ github.event.inputs.branch }}"
+    - name: Check if Dockerfile exists
+      run: |
+        if ls | grep -q '^Dockerfile$'; then
+          echo "Dockerfile exists"
+        else
+          echo "Dockerfile does not exist"
+          exit 1
+        fi
