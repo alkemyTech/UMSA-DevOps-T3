@@ -5,18 +5,10 @@ env:
           REMOTE_HOST: ${{ secrets.IP_PAGOS_QA }}
           APP_NAME: app.js
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Seleccione el entorno de destino'
-        required: true
-        default: 'QA'
-        options:
-          - 'QA: Entorno de Pruebas (QA)'
-          - 'PROD: Entorno de Producción (PROD)'
   push:
     branches:
       - franco-pagos-qa
+  workflow_dispatch:
 jobs:
   ci-pagos-qa:
     runs-on: ubuntu-latest
