@@ -5,7 +5,7 @@ provider "aws" {
 
 # Crear un nuevo grupo de seguridad
 resource "aws_security_group" "instance_security_group" {
-  name        = "instance_security_group6"
+  name        = "instance_security_group7"
   description = "Security group for EC2 instance"
 }
 
@@ -13,7 +13,7 @@ resource "aws_security_group" "instance_security_group" {
 resource "aws_instance" "PROVEEDORES_QA_instance" {
   ami           = "ami-0a3c3a20c09d6f377" # AMI de Amazon Linux
   instance_type = "t2.micro"              # Tipo de instancia
-  key_name      = "PEM_PROV_DEV"          # Nombre de la clave PEM
+  key_name      = "PEM_PROV_QA"          # Nombre de la clave PEM
 
   # Asociar la instancia con el grupo de seguridad recién creado
   vpc_security_group_ids = [aws_security_group.instance_security_group.id]
@@ -81,6 +81,6 @@ resource "aws_security_group_rule" "custom_egress" {
 }
 
 # Salida para mostrar la IP pública de la instancia EC2 después del despliegue
-output "public_ip_dev" {
+output "public_ip_qa" {
   value = aws_instance.PROVEEDORES_QA_instance.public_ip
 }
