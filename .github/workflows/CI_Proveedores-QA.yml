@@ -1,0 +1,57 @@
+name: CI Pipeline - Prov QA
+on:
+  push:
+    branches:
+      - martin-prov-qa
+
+env:
+  SSH_PRIVATE_KEY: ${{ secrets.PEM_PROV_QA }}
+  REMOTE_USER: ec2-user
+  REMOTE_HOST: ${{ secrets.IP_PROV_QA }}
+  GH_TOKEN: ${{ secrets.TOKEN_PROV }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js, NPM, and Git
+        run: |
+          sudo apt-get update
+          sudo apt-get install nodejs npm git -y
+
+      - name: Clone Repo
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.REMOTE_USER }}
+          key: ${{ env.SSH_PRIVATE_KEY }} 
+          script: |
+            
+            # Check if Git is installed, if not, install it
+            if ! [ -x "$(command -v git)" ]; then
+              echo 'Error: git is not installed. Installing git...' >&2
+              sudo yum update -y
+              sudo yum install git -y
+            fi
+            cd /opt
+            sudo rm -rf /opt/appDir # Remove directory if exists
+            sudo git clone https://${{ secrets.GH_TOKEN }}@github.com/alkemyTech/UMSA-DevOps-T3 /opt/appDir
+
+      - name: Install NPM Packages
+        run: |
+          sudo mkdir -p /opt/appDir # Create directory if it doesn't exist
+          cd /opt/appDir # Change directory to /opt/appDir
+          npm init -y # Initialize package.json with default values
+          sudo npm install -g express pm2
+          npm install
+      - name: Start Node Service
+        run: |
+          sleep 5 # Espera 5 segundos  
+          sudo $(which pm2) start -f app.js
+
+      - name: Check if Application is Running
+        run: |
+          sudo pm2 status
