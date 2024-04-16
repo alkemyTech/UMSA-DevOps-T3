@@ -1,6 +1,17 @@
 name: pagos-qa
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch name'
+        required: true
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'QA'
+        options:
+          - 'QA'
+          - 'main'
 env:
           SSH_PRIVATE_KEY: ${{ secrets.PEM_ORG_PAGOS_DEV }}
           REMOTE_USER: ec2-user
