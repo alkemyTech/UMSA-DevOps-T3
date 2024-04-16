@@ -30,7 +30,7 @@ jobs:
           docker build -t imagen-prov-qa .
 
       - name: Login to Docker Hub
-        run: echo "${{ secrets.TOKEN_PROV }}" | docker login -u 471626 --Tinchogi22---stdin
+        run: echo "${{ secrets.TOKEN_PROV }}" | docker login -u 471626 --Tinchogi200-stdin
 
       - name: Push to Docker Hub
         run: docker push 471626/imagen-prov-qa
