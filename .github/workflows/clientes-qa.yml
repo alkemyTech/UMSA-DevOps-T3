@@ -1,4 +1,4 @@
-name: CLIENTES-QA
+name: CD-CLIENTES-QA
 
 on:
   workflow_dispatch:
