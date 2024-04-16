@@ -45,6 +45,12 @@ jobs:
           else
               echo "docker is installed."
           fi
+          if systemctl is-active --quiet docker; then
+              echo "Docker service is already running."
+          else
+              sudo systemctl start docker
+          fi          
+          sudo usermod -aG docker ${{ env.REMOTE_HOST }}
     - name: Descargar imagen docker
       uses: appleboy/ssh-action@master
       with:
@@ -52,5 +58,14 @@ jobs:
         username: ${{ env.REMOTE_USER }}
         key: ${{ env.SSH_PRIVATE_KEY }}
         script: |
-          docker pull ${{env.DOCKERHUB_USERNAME }}/node-app:latest
-          docker run -dp 3000:3000 ${{env.DOCKERHUB_USERNAME }}/node-app:latest
+          sudo docker pull ${{env.DOCKERHUB_USERNAME }}/node-app:latest
+          sudo docker run -dp 3000:3000 ${{env.DOCKERHUB_USERNAME }}/node-app:latest
+    - name: Verificar servicio en ejecucion
+      run: |
+        if curl http://localhost:3000 >/dev/null; then
+          echo " ${{ env.APP_NAME }} is running."
+        else
+          echo " ${{ env.APP_NAME }} is not running."
+          exit 1
+        fi
+
