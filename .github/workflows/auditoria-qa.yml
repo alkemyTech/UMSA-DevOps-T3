@@ -6,12 +6,12 @@ on:
       app_container_name:
         description: 'Nombre del contenedor'
         required: true
-        default: 'app-node-qa'
+        default: 'auditoria-app-qa'
   
 env:
-  SSH_PRIVATE_KEY: ${{ secrets.PEM_CLIENTES_QA }}
+  SSH_PRIVATE_KEY: ${{ secrets.PEM_AUDITORIA_QA }}
   REMOTE_USER: ec2-user
-  REMOTE_HOST: ${{ secrets.IP_CLIENTES_QA }}
+  REMOTE_HOST: ${{ secrets.IP_AUDITORIA_QA }}
   APP_NAME: ${{ github.event.inputs.app_container_name }}
   DOCKERHUB_TOKEN: ${{ secrets.DH_TOKEN_CLIENTES }}
   DOCKERHUB_USERNAME: romicalani
