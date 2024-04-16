@@ -8,7 +8,7 @@ env:
   REMOTE_USER: ec2-user
   REMOTE_HOST: ${{ secrets.IP_CLIENTES_QA }}
   APP_NAME: app.js
-  DOCKERHUB_TOKEN: ${{ DH_TOKEN_CLIENTES }}
+  DOCKERHUB_TOKEN: ${{ secrets.DH_TOKEN_CLIENTES }}
   DOCKERHUB_USERNAME: romicalani
 
 jobs:
