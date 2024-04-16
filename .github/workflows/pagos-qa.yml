@@ -77,8 +77,6 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
               cd /opt/ms-pagos-qa-app
-              docker stop pagosimagen || true
-              docker rm pagosimagen || true
               # Obtener el ID del contenedor en ejecución
               CONTAINER_ID=$(docker ps -qf "name=pagosimagen")
               # Si hay un contenedor en ejecución, detenerlo
@@ -127,6 +125,8 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
                 echo "Presiona un botón para desplegar en QA"
+                docker stop pagosimagen || true
+                docker rm pagosimagen || true
                 docker run -d -p 3000:3000 --name pagosimagen pagosimagen
                 # Verificar si el contenedor está en ejecución
                 if docker ps | grep -q "pagosimagen"; then
@@ -134,3 +134,5 @@ jobs:
                 else
                   echo "¡Error! El contenedor no se inició correctamente."
                 fi
+                docker inspect --format='{{.Image}}' pagosimagen
+                docker images
