@@ -41,7 +41,7 @@ jobs:
         key: ${{ env.SSH_PRIVATE_KEY }}
         script: |
           if ! command -v docker > /dev/null; then
-              sudo yum install docker
+              sudo yum install docker -y
           else
               echo "docker is installed."
           fi
