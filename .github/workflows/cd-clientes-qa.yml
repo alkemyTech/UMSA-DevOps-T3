@@ -17,22 +17,13 @@ jobs:
 
     steps:
     
-    - name: Ver lista 1
+    - name: ver
       run: |
         ls -la
-        cd ./
-        ls -la
+        cat Dockerfile
     - name: Iniciar sesion en Docker Hub
       uses: docker/login-action@v3
       with:
         username: ${{ env.DOCKERHUB_USERNAME }}
         password: ${{ env.DOCKERHUB_TOKEN }}
-    - name: Ver lista 2
-      run: ls -la
-
-    - name: Generar imagen Docker
-      run: |
-        docker build . -t ${{env.DOCKERHUB_USERNAME }}/node-app:latest
-    - name: Generar y Subir imagen Docker
-      run: |
-        docker push ${{env.DOCKERHUB_USERNAME }}/node-app:latest
+    
