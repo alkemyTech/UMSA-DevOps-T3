@@ -81,7 +81,8 @@ jobs:
                 docker rmi pagosimagen
               fi
               docker build -t pagosimagen .
-            
+              # Eliminar imágenes sin etiqueta
+              docker rmi $(docker images -f "dangling=true" -q) || true
 
       # Autenticación en DockerHub
       - name: Login to DockerHub
