@@ -1,4 +1,4 @@
-name: AUDITORIA-QA
+name: CD-AUDITORIA-QA
 
 on:
   workflow_dispatch:
