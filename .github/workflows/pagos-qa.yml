@@ -116,6 +116,7 @@ jobs:
                 if [ ! -z "$CONTAINER_ID" ]; then
                   # Si hay un contenedor en ejecución, detenerlo
                   docker stop $CONTAINER_ID
+                  sleep 5
                   echo "Contenedor existente detenido."
                 fi
                 # Ejecutar el contenedor Docker después de asegurarse de que la imagen esté disponible
