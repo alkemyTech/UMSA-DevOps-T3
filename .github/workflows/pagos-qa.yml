@@ -22,15 +22,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
-      - name: SonarCloud scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_PAGOS }}
-          SONAR_TOKEN: ${{ secrets.SONAR_PAGOS_TOKEN }}
-          SONAR_PROJECT_KEY: "pago-qa"
-          SONAR_ORGANIZATION: "pago-qa"
-        
+
       - name: Crear directorio de trabajo en la máquina EC2
         uses: appleboy/ssh-action@master
         with:
