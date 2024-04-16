@@ -125,16 +125,6 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
                 echo "Presiona un botón para desplegar en QA"
-                # Obtener el ID del contenedor existente si está en ejecución
-                # CONTAINER_ID=$(docker ps -qf "name=pagosimagen")
-                #if [ ! -z "$CONTAINER_ID" ]; then
-                  # Si hay un contenedor en ejecución, detenerlo
-                #  docker stop $CONTAINER_ID
-                #  docker rm $CONTAINER_ID
-                 # sleep 5
-                 # echo "Contenedor existente detenido."
-                #fi
-                # Ejecutar el contenedor Docker después de asegurarse de que la imagen esté disponible
                 docker run -d -p 3000:3000 --name pagosimagen pagosimagen
                 # Verificar si el contenedor está en ejecución
                 if docker ps | grep -q "pagosimagen"; then
