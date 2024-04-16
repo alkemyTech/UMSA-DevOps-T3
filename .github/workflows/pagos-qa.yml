@@ -76,9 +76,11 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            cd /opt/ms-pagos-qa-app
-            docker rmi pagosimagen || true
-            docker build -t pagosimagen .
+              cd /opt/ms-pagos-qa-app
+              if docker images -q pagosimagen; then
+                docker rmi pagosimagen
+              fi
+              docker build -t pagosimagen .
             
 
       # Autenticación en DockerHub
@@ -121,7 +123,7 @@ jobs:
                   echo "Contenedor existente detenido."
                 fi
                 # Ejecutar el contenedor Docker después de asegurarse de que la imagen esté disponible
-                docker run -d -p 3000:3000 pagosimagen
+                docker run -d -p 3000:3000 --name pagosimagen pagosimagen
                 # Verificar si el contenedor está en ejecución
                 if docker ps | grep -q "pagosimagen"; then
                   echo "El contenedor está en ejecución."
