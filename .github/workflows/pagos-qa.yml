@@ -125,6 +125,8 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
                 echo "Presiona un botón para desplegar en QA"
+                docker stop pagosimagen || true
+                docker rm pagosimagen || true
                 docker run -d -p 3000:3000 --name pagosimagen pagosimagen
                 # Verificar si el contenedor está en ejecución
                 if docker ps | grep -q "pagosimagen"; then
