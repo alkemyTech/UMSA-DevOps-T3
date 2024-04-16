@@ -6,6 +6,13 @@ on:
       branch:
         description: 'Branch name'
         required: true
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'QA'
+        options:
+          - 'QA'
+          - 'DEV'
 
 jobs:
   check-branch:
