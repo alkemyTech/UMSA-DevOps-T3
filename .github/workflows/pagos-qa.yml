@@ -77,9 +77,20 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
               cd /opt/ms-pagos-qa-app
+              # Obtener el ID del contenedor en ejecución
+              CONTAINER_ID=$(docker ps -qf "name=pagosimagen")
+              # Si hay un contenedor en ejecución, detenerlo
+              if [ ! -z "$CONTAINER_ID" ]; then
+                docker stop $CONTAINER_ID
+                docker rm $CONTAINER_ID
+                sleep 5
+                echo "Contenedor existente detenido."
+              fi
+              # Eliminar imágenes antiguas si existen
               if docker images -q pagosimagen; then
                 docker rmi -f pagosimagen
               fi
+              # Construir la imagen
               docker build -t pagosimagen .
               # Eliminar imágenes sin etiqueta
               docker rmi $(docker images -f "dangling=true" -q) || true
