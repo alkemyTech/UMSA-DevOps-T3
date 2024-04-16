@@ -2,9 +2,6 @@ name: pagos-qa
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'Branch name'
-        required: true
       environment:
         description: 'Deployment environment'
         required: true
