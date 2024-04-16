@@ -78,7 +78,7 @@ jobs:
           script: |
               cd /opt/ms-pagos-qa-app
               if docker images -q pagosimagen; then
-                docker rmi pagosimagen
+                docker rmi -f pagosimagen
               fi
               docker build -t pagosimagen .
               # Eliminar imágenes sin etiqueta
