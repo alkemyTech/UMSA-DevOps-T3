@@ -7,7 +7,7 @@ env:
   SSH_PRIVATE_KEY: ${{ secrets.PEM_CLIENTES_QA }}
   REMOTE_USER: ec2-user
   REMOTE_HOST: ${{ secrets.IP_CLIENTES_QA }}
-  APP_NAME: app.js
+  APP_NAME: app-node
   DOCKERHUB_TOKEN: ${{ secrets.DH_TOKEN_CLIENTES }}
   DOCKERHUB_USERNAME: romicalani
 
@@ -27,11 +27,11 @@ jobs:
         
     - name: Generar imagen Docker
       run: |
-        docker build . -t ${{env.DOCKERHUB_USERNAME }}/node-app:latest
+        docker build . -t ${{env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
         
     - name: Subir imagen Docker
       run: |
-        docker push ${{env.DOCKERHUB_USERNAME }}/node-app:latest
+        docker push ${{env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
 
     - name: Instalar docker
       uses: appleboy/ssh-action@master
@@ -51,13 +51,11 @@ jobs:
               sudo systemctl start docker
           fi          
           sudo usermod -aG docker ${{ env.REMOTE_USER }}
-    - name: Esperar 15 segundos antes de verificar la aplicación
+    - name: Esperar 15 segundos
       run: sleep 15
     - name: Detener si esta en ejecucion
-      run: |
-        
-        sudo docker stop $(sudo docker ps -q) || true 
-    - name: Esperar 15 segundos antes de verificar la aplicación
+      run: sudo docker stop $(sudo docker ps -q) || true 
+    - name: Esperar 15 segundos
       run: sleep 15
     - name: Descargar imagen docker
       uses: appleboy/ssh-action@master
@@ -66,19 +64,18 @@ jobs:
         username: ${{ env.REMOTE_USER }}
         key: ${{ env.SSH_PRIVATE_KEY }}
         script: |
-          if ! sudo docker image inspect ${{env.DOCKERHUB_USERNAME }}/node-app:latest &> /dev/null; then
-            sudo docker pull ${{env.DOCKERHUB_USERNAME }}/node-app:latest
-          fi
-          sudo docker run -dp 3000:3000 ${{env.DOCKERHUB_USERNAME }}/node-app:latest
+          sudo docker pull ${{env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
+          sudo docker run -dp 3000:3000 ${{env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
 
-    - name: Esperar 15 segundos antes de verificar la aplicación
+    - name: Esperar 15 segundos
       run: sleep 15
     - name: Verificar servicio en ejecucion
       run: |
-        if curl http://localhost:3000 >/dev/null; then
+        if curl -v http://localhost:3000 >/dev/null 2>&1; then
           echo " ${{ env.APP_NAME }} is running."
         else
           echo " ${{ env.APP_NAME }} is not running."
+          curl -v http://localhost:3000
           exit 1
         fi
 
