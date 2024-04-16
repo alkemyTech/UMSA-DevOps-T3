@@ -1,14 +1,14 @@
 name: pagos-qa
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deployment environment'
-        required: true
-        default: 'QA'
-        options:
-          - 'QA'
-          - 'DEV'
+    #inputs:
+    #  environment:
+    #    description: 'Deployment environment'
+    #    required: true
+    #    default: 'QA'
+    #    options:
+    #      - 'QA'
+    #      - 'DEV'
 env:
           SSH_PRIVATE_KEY: ${{ secrets.PEM_ORG_PAGOS_DEV }}
           REMOTE_USER: ec2-user
@@ -103,7 +103,7 @@ jobs:
 
       # Despliegue al entorno de QA (manual)
       - name: Desplegar al entorno de QA
-        if:  github.event.inputs.environment == 'QA'
+        #if:  github.event.inputs.environment == 'QA'
         uses: appleboy/ssh-action@master
         with:
           host: ${{ env.REMOTE_HOST }}
