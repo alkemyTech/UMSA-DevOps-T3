@@ -51,10 +51,14 @@ jobs:
               sudo systemctl start docker
           fi          
           sudo usermod -aG docker ${{ env.REMOTE_USER }}
+    - name: Esperar 15 segundos antes de verificar la aplicación
+      run: sleep 15
     - name: Detener si esta en ejecucion
       run: |
         
         sudo docker stop $(sudo docker ps -q) || true 
+    - name: Esperar 15 segundos antes de verificar la aplicación
+      run: sleep 15
     - name: Descargar imagen docker
       uses: appleboy/ssh-action@master
       with:
@@ -66,6 +70,9 @@ jobs:
             sudo docker pull ${{env.DOCKERHUB_USERNAME }}/node-app:latest
           fi
           sudo docker run -dp 3000:3000 ${{env.DOCKERHUB_USERNAME }}/node-app:latest
+
+    - name: Esperar 15 segundos antes de verificar la aplicación
+      run: sleep 15
     - name: Verificar servicio en ejecucion
       run: |
         if curl http://localhost:3000 >/dev/null; then
