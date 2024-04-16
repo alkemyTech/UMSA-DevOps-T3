@@ -53,10 +53,10 @@ jobs:
           sudo usermod -aG docker ${{ env.REMOTE_USER }}
     - name: Detener si esta en ejecucion
       run: |
-        CONTAINER_ID=$(docker ps --filter "publish=3000" --format "{{.ID}}")
+        CONTAINER_ID=$(sudo docker ps --filter "publish=3000" --format "{{.ID}}")
         if [ ! -z "$CONTAINER_ID" ]; then
           echo "Deteniendo contenedor con ID: $CONTAINER_ID"
-          docker stop $CONTAINER_ID
+          sudo docker stop $CONTAINER_ID
           echo "Contenedor detenido exitosamente."
         else
           echo "No se encontró ningún contenedor utilizando el puerto 3000."
