@@ -14,7 +14,7 @@ env:
   REMOTE_HOST: ${{ secrets.IP_COBRANZAS_QA }}
   APP_NAME: ${{ github.event.inputs.app_container_name }}
   DOCKERHUB_TOKEN: ${{ secrets.DOCKER }}
-  DOCKERHUB_USERNAME: ${{ secrets.USERS_DOCKER }}
+  DOCKERHUB_USERNAME: ${{ secrets.USER_DOCKER }}
 
 jobs:
   build:
