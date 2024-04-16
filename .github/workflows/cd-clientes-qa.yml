@@ -51,12 +51,16 @@ jobs:
               sudo systemctl start docker
           fi          
           sudo usermod -aG docker ${{ env.REMOTE_USER }}
-    - name: Esperar 15 segundos
-      run: sleep 15
+
     - name: Detener si esta en ejecucion
-      run: sudo docker stop local-app || true 
-    - name: Esperar 15 segundos
-      run: sleep 15
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.REMOTE_HOST }}
+        username: ${{ env.REMOTE_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          sudo docker stop ${{env.APP_NAME}} || true 
+      
     - name: Descargar imagen docker
       uses: appleboy/ssh-action@master
       with:
@@ -64,16 +68,21 @@ jobs:
         username: ${{ env.REMOTE_USER }}
         key: ${{ env.SSH_PRIVATE_KEY }}
         script: |
-          sudo docker pull ${{ env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
-          sudo docker run -dp 3000:3000 --name local-app ${{ env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
+          if ! sudo docker image ${{ env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest &> /dev/null; then
+            sudo docker pull ${{ env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
+          fi
+          sudo docker run -dp 3000:3000 --name ${{env.APP_NAME}} ${{ env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
 
-    - name: Esperar 15 segundos
-      run: sleep 15
     - name: Verificar servicio en ejecucion
-      run: |
-        if netstat -an | grep :3000; then
-          echo "app is running"
-        else
-          echo "app is not running"
-        fi
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.REMOTE_HOST }}
+        username: ${{ env.REMOTE_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          if netstat -an | grep :3000; then
+            echo "app is running"
+          else
+            echo "app is not running"
+          fi
 
