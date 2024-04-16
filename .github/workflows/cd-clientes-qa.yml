@@ -1,23 +1,16 @@
 name: CD-CLIENTES-QA
+
 on:
   workflow_dispatch:
-    inputs:
-        branch:
-          description: 'Elegir branch'
-          required: true
-          default: 'main'
-
   
 jobs:
-  crear_subir_imagen_docker:
+  test:
     runs-on: ubuntu-latest 
 
-    steps:        
-    - name: Check if Dockerfile exists
+    steps:   
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Ver rama actual
       run: |
-        if ls | grep -q '^Dockerfile$'; then
-          echo "Dockerfile exists"
-        else
-          echo "Dockerfile does not exist"
-          exit 1
-        fi
+        echo "rama actual: ${{github.ref_name}}"
