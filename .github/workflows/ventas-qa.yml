@@ -1,0 +1,16 @@
+name: Cd-ventas-qa
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+
+    steps:   
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Ver rama actual
+      run: |
+        echo "rama actual: ${{github.ref_name}}"
