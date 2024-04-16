@@ -32,3 +32,25 @@ jobs:
     - name: Subir imagen Docker
       run: |
         docker push ${{env.DOCKERHUB_USERNAME }}/node-app:latest
+
+    - name: Instalar docker
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.REMOTE_HOST }}
+        username: ${{ env.REMOTE_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          if ! command -v docker > /dev/null; then
+              sudo yum install docker
+          else
+              echo "docker is installed."
+          fi
+    - name: Descargar imagen docker
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.REMOTE_HOST }}
+        username: ${{ env.REMOTE_USER }}
+        key: ${{ env.SSH_PRIVATE_KEY }}
+        script: |
+          docker pull ${{env.DOCKERHUB_USERNAME }}/node-app:latest
+          docker run -dp 3000:3000 ${{env.DOCKERHUB_USERNAME }}/node-app:latest
