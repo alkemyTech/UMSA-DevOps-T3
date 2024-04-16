@@ -50,7 +50,7 @@ jobs:
           else
               sudo systemctl start docker
           fi          
-          sudo usermod -aG docker ${{ env.REMOTE_HOST }}
+          sudo usermod -aG docker ${{ env.REMOTE_USER }}
     - name: Descargar imagen docker
       uses: appleboy/ssh-action@master
       with:
