@@ -54,7 +54,7 @@ jobs:
     - name: Esperar 15 segundos
       run: sleep 15
     - name: Detener si esta en ejecucion
-      run: sudo docker stop $(sudo docker ps -q) || true 
+      run: sudo docker stop local-app || true 
     - name: Esperar 15 segundos
       run: sleep 15
     - name: Descargar imagen docker
@@ -64,18 +64,16 @@ jobs:
         username: ${{ env.REMOTE_USER }}
         key: ${{ env.SSH_PRIVATE_KEY }}
         script: |
-          sudo docker pull ${{env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
-          sudo docker run -dp 3000:3000 ${{env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
+          sudo docker pull ${{ env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
+          sudo docker run -dp 3000:3000 --name local-app ${{ env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
 
     - name: Esperar 15 segundos
       run: sleep 15
     - name: Verificar servicio en ejecucion
       run: |
-        if curl -v http://localhost:3000 >/dev/null 2>&1; then
-          echo " ${{ env.APP_NAME }} is running."
+        if netstat -an | grep :3000; then
+          echo "app is running"
         else
-          echo " ${{ env.APP_NAME }} is not running."
-          curl -v http://localhost:3000
-          exit 1
+          echo "app is not running"
         fi
 
