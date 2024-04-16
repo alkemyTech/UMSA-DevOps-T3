@@ -57,14 +57,20 @@ jobs:
           fi          
           sudo usermod -aG docker ${{ env.REMOTE_USER }}
 
-    - name: Detener si esta en ejecucion
+    - name: Detener y eliminar si esta en ejecucion
       uses: appleboy/ssh-action@master
       with:
         host: ${{ env.REMOTE_HOST }}
         username: ${{ env.REMOTE_USER }}
         key: ${{ env.SSH_PRIVATE_KEY }}
         script: |
-          sudo docker stop $(sudo docker ps -q) || true 
+        
+          if sudo docker ps -a --format '{{.Names}}' | grep -q ${{env.APP_NAME}}; then
+            echo "Eliminando contenedor con nombre: ${{env.APP_NAME}}"
+            sudo docker stop $(sudo docker ps -q) || true
+            sudo docker rm -f ${{env.APP_NAME}} || true
+            echo "Contenedor eliminado exitosamente."
+          fi
       
     - name: Descargar imagen docker
       uses: appleboy/ssh-action@master
