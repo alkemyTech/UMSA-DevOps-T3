@@ -21,6 +21,8 @@ jobs:
       with:
         username: ${{ env.DOCKERHUB_USERNAME }}
         password: ${{ env.DOCKERHUB_TOKEN }}
+    - name: Ver lista
+      run: ls -la
         
     - name: Generar y Subir imagen Docker
       run: |
