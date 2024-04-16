@@ -16,7 +16,7 @@ env:
           APP_NAME: app.js
           
 jobs:
-  ci-pagos-qa:
+  pagos-qa:
     runs-on: ubuntu-latest
 
     steps:
