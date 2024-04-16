@@ -16,11 +16,12 @@ jobs:
     runs-on: ubuntu-latest 
 
     steps:
-    - name: Generar imagen Docker
-      run: |
-        docker build . -t ${{env.DOCKERHUB_USERNAME }}/node-app:latest
+    
     - name: Ver lista 1
-      run: ls -la
+      run: |
+        ls -la
+        cd ./
+        ls -la
     - name: Iniciar sesion en Docker Hub
       uses: docker/login-action@v3
       with:
@@ -28,7 +29,10 @@ jobs:
         password: ${{ env.DOCKERHUB_TOKEN }}
     - name: Ver lista 2
       run: ls -la
-        
+
+    - name: Generar imagen Docker
+      run: |
+        docker build . -t ${{env.DOCKERHUB_USERNAME }}/node-app:latest
     - name: Generar y Subir imagen Docker
       run: |
         docker push ${{env.DOCKERHUB_USERNAME }}/node-app:latest
