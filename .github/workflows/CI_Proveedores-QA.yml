@@ -59,7 +59,7 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |  
-            if netstat -an | grep :3000; then
+            if netstat -an | grep ':3000.*LISTEN'; then
                 echo "App ok"
             else
                 echo "Error"
