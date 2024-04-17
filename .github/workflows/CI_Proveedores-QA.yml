@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Docker Image 
         run: |
-          docker build -t imagen-prov-qa .
+          docker build . -t 471626/imagen-prov-qa:latest
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.TOKEN_PROV_QA }}" | docker login -u 471626 --password-stdin
