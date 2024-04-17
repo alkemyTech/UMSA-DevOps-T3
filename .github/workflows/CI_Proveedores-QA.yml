@@ -46,7 +46,7 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |  
-            if curl http://localhost:3000 > /dev/null; then
+            if netstat -an | grep :3000; then
                 echo "App ok"
             else
                 echo "Error"
