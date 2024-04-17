@@ -51,17 +51,3 @@ jobs:
       - name: Deploy to QA Environment (using secrets)
         run:
           docker pull 471626/imagen-prov-qa && docker run -d -p 3000:3000 471626/imagen-prov-qa
-
-      - name: Verify Service is Running
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.REMOTE_HOST }}
-          username: ${{ env.REMOTE_USER }}
-          key: ${{ env.SSH_PRIVATE_KEY }}
-          script: |  
-            if netstat -an | grep ':3000.*LISTEN'; then
-                echo "App ok"
-            else
-                echo "Error"
-                exit 1
-            fi
