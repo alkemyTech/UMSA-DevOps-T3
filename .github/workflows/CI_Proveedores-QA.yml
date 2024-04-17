@@ -37,8 +37,7 @@ jobs:
 
       - name: Deploy to QA Environment (using secrets)
         run:
-          docker pull 471626/imagen-prov-qa
-          docker run -d -p 3000:3000 471626/imagen-prov-qa 
+          docker pull 471626/imagen-prov-qa && docker run -d -p 3000:3000 471626/imagen-prov-qa
 
       - name: Verify Service is Running
         uses: appleboy/ssh-action@master
