@@ -13,5 +13,7 @@ RUN npm install
 # Copy the rest of the application code to the container
 COPY . .
 
+EXPOSE 3000
+
 # Start the app
 CMD ["node", "app.js"]
