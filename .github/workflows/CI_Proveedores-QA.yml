@@ -33,7 +33,7 @@ jobs:
         run: echo "${{ secrets.TOKEN_PROV_QA }}" | docker login -u 471626 --password-stdin
 
       - name: Push to Docker Hub
-        run: docker push 471626/imagen-prov-qa
+        run: docker push 471626/martin-prov-qa:imagen-prov-qa
 
       - name: Deploy to QA Environment
         run: |
