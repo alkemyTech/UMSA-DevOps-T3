@@ -25,7 +25,7 @@ jobs:
           sudo apt-get remove -y containerd.io  # Elimina containerd.io si está instalado
           sudo apt-get install -y docker.io
 
-      - name: Build Docker Image
+      - name: Build Docker Image (consider using a Dockerfile)
         run: |
           docker build -t imagen-prov-qa .
 
@@ -35,10 +35,10 @@ jobs:
       - name: Push to Docker Hub
         run: docker push 471626/martin-prov-qa:imagen-prov-qa
 
-      - name: Deploy to QA Environment
+      - name: Deploy to QA Environment (using secrets)
         run: |
-          ssh -i C:\Users\marti\Downloads\PEM_PROV_QA.pem ec2-user@3.88.58.18 'docker pull 471626/imagen-prov-qa && docker run -d -p 3000:3000 471626/imagen-prov-qa'
+          ssh -i ${{ secrets.PEM_PROV_QA }} ec2-user@${{ secrets.IP_PROV_QA }} 'docker pull 471626/imagen-prov-qa && docker run -d -p 3000:3000 471626/imagen-prov-qa'
 
       - name: Verify Service is Running
         run: |
-          ssh -i C:\Users\marti\Downloads\PEM_PROV_QA.pem ec2-user@3.88.58.18 'docker ps -a'
+          ssh -i ${{ secrets.PEM_PROV_QA }} ec2-user@${{ secrets.IP_PROV_QA }} 'docker ps -a'
