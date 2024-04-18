@@ -15,4 +15,4 @@ RUN npm install
 EXPOSE 3000
 
 # Comando para iniciar la aplicación cuando el contenedor se inicie
-CMD ["pm2", "start", "app.js"]
+CMD ["pm2", "start", "/opt/appDir/app.js"]
