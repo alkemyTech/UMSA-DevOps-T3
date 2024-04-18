@@ -1,5 +1,6 @@
+# Nombre del pipeline
 name: CD-AUDITORIA-QA
-
+# Disparador manual del pipeline con entrada para el nombre del contenedor
 on:
   workflow_dispatch:
     inputs:
@@ -7,7 +8,8 @@ on:
         description: 'Nombre del contenedor'
         required: true
         default: 'auditoria-app-qa'
-  
+        
+# Variables de entorno
 env:
   SSH_PRIVATE_KEY: ${{ secrets.PEM_AUDITORIA_QA }}
   REMOTE_USER: ec2-user
@@ -29,15 +31,15 @@ jobs:
       with:
         username: ${{ env.DOCKERHUB_USERNAME }}
         password: ${{ env.DOCKERHUB_TOKEN }}
-        
+    # Construir la imagen Docker usando variables de entorno
     - name: Generar imagen Docker
       run: |
         docker build . -t ${{env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
-        
+    # Subir la imagen Docker a nuestra cuenta de Docker Hub
     - name: Subir imagen Docker
       run: |
         docker push ${{env.DOCKERHUB_USERNAME }}/${{env.APP_NAME}}:latest
-
+    # Instalar Docker en la instancia ec2 en AWS
     - name: Instalar docker
       uses: appleboy/ssh-action@master
       with:
