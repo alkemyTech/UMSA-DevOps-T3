@@ -5,6 +5,9 @@ on:
   workflow_dispatch:  # Desencadenar manualmente desde la interfaz de usuario de GitHub
     inputs:
       app_container_name: 
+        description: 'Nombre del contenedor'
+        required: true
+        default: 'proveedores-app-qa'
 
 env:
   SSH_PRIVATE_KEY: ${{ secrets.PEM_PROV_QA }}
@@ -20,6 +23,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      
+      - name: Build Docker Image 
+        run: |
+          # Construir la imagen Docker
+          sudo pwd
+          docker build . -t 471626/imagen-prov-qa:latest
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.TOKEN_PROV_QA }}" | docker login -u 471626 --password-stdin
+
+      - name: Push to Docker Hub
+        run: docker push 471626/imagen-prov-qa:latest
+      
       - name: Install Docker and Dependencies
         uses: appleboy/ssh-action@master
         with:
@@ -43,16 +58,6 @@ jobs:
             
             # Agregar el usuario al grupo Docker para evitar el uso de sudo
             sudo usermod -aG docker ${{ env.REMOTE_USER }}
-      - name: Build Docker Image 
-        run: |
-          # Construir la imagen Docker
-          sudo pwd
-          docker build . -t 471626/imagen-prov-qa:latest
-      - name: Login to Docker Hub
-        run: echo "${{ secrets.TOKEN_PROV_QA }}" | docker login -u 471626 --password-stdin
-
-      - name: Push to Docker Hub
-        run: docker push 471626/imagen-prov-qa:latest
 
       - name: Deploy to QA Environment (using secrets)
         run:
